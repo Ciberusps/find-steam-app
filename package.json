@@ -1,6 +1,6 @@
 {
   "name": "@ciberus/find-steam-app",
-  "version": "1.1.5",
+  "version": "1.1.7",
   "private": false,
   "description": "Find location of an installed Steam app",
   "keywords": [
@@ -10,7 +10,10 @@
     "steam",
     "valve"
   ],
-  "repository": "https://github.com/ciberusps/find-steam-app",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ciberusps/find-steam-app"
+  },
   "license": "MIT",
   "author": "ark120202",
   "files": [
@@ -21,35 +24,26 @@
   "scripts": {
     "build": "tsc",
     "dev": "tsc --watch",
-    "lint": "run-s lint:prettier lint:tslint",
-    "lint:prettier": "prettier --check **/*.{ts,md,yml,json}",
-    "fix:prettier": "prettier --write **/*.{ts,md,yml,json}",
-    "lint:tslint": "eslint . --ext .ts",
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "lint:prettier": "prettier --check **/*.{js,jsx,ts,tsx,json,css,scss,md}",
+    "fix:prettier": "prettier --write **/*.{js,jsx,ts,tsx,json,css,scss,md}",
+    "typecheck": "tsc --noEmit",
     "prepublishOnly": "npm run build"
-  },
-  "prettier": {
-    "printWidth": 100,
-    "proseWrap": "always",
-    "singleQuote": true,
-    "trailingComma": "all"
   },
   "dependencies": {
     "execa": "^1.0.0",
     "fs-extra": "^7.0.1",
     "p-filter": "^2.1.0",
-    "tslib": "^1.9.3",
     "vdf-extra": "^2.2.2"
   },
   "devDependencies": {
-    "@ark120202/tslint-config": "^4.0.1",
-    "@ark120202/typescript-config": "^2.0.0",
     "@types/execa": "^0.9.0",
-    "@types/fs-extra": "^5.0.5",
-    "@typescript-eslint/eslint-plugin": "^4.31.2",
-    "@typescript-eslint/parser": "^4.31.2",
-    "eslint": "^7.32.0",
-    "npm-run-all": "^4.1.5",
-    "prettier": "^1.17.0",
-    "typescript": "^3.4.3"
+    "@types/fs-extra": "^5.1.0",
+    "@typescript-eslint/eslint-plugin": "^5.21.0",
+    "@typescript-eslint/parser": "^5.21.0",
+    "eslint": "^8.14.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "prettier": "^2.6.2",
+    "typescript": "^4.6.3"
   }
 }

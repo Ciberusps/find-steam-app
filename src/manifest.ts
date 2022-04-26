@@ -1,6 +1,6 @@
-import fs from 'fs-extra';
-import path from 'path';
-import vdf from 'vdf-extra';
+import fs from "fs-extra";
+import path from "path";
+import vdf from "vdf-extra";
 
 export interface AppManifest {
   appid: number;
@@ -38,7 +38,7 @@ export async function hasManifest(library: string, appid: number) {
 
 export async function readManifest(library: string, appid: number) {
   const manifestPath = path.join(library, `appmanifest_${appid}.acf`);
-  const manifestContent = await fs.readFile(manifestPath, 'utf8');
+  const manifestContent = await fs.readFile(manifestPath, "utf8");
   const manifestData = vdf.parse<AppManifest>(manifestContent);
 
   return manifestData;
