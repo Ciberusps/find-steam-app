@@ -22,8 +22,11 @@ await findSteamAppByName("dota 2 beta");
 await findSteam();
 // => '/path/to/steam'
 
-await findSteamLibraries();
+await findSteamLibrariesPaths();
 // => ['/path/to/steam/steamapps', '/path/to/library/steamapps']
+
+await findSteamLibraries();
+// => [{ path: '/path/to/library/steamapps', totalsize: 41234, apps: ['570'], ... }, ...]
 
 // TODO:
 await findSteamApps();
@@ -31,6 +34,9 @@ await findSteamApps();
 
 await findSteamAppManifest(570);
 // => { appid: 570, Universe: 1, name: 'Dota 2', ... }
+
+// utils
+// manifest
 ```
 
 For more information about manifest, see [manifest.ts](src/manifest.ts)
