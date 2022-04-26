@@ -1,17 +1,17 @@
-# find-steam-app
+# ciberusps/find-steam-app
 
 > Find location of an installed Steam app
 
 ## Usage
 
-```js
-const {
+```ts
+import {
   findSteam,
   findSteamAppById,
   findSteamAppByName,
   findSteamAppManifest,
   findSteamLibraries,
-} = require('find-steam-app');
+} from 'find-steam-app';
 
 await findSteamAppById(570);
 // => '/path/to/steam/steamapps/common/dota 2 beta'

@@ -1,6 +1,6 @@
 {
-  "name": "@moddota/find-steam-app",
-  "version": "1.1.0",
+  "name": "@ciberusps/find-steam-app",
+  "version": "1.1.1",
   "description": "Find location of an installed Steam app",
   "keywords": [
     "app",
@@ -9,7 +9,7 @@
     "steam",
     "valve"
   ],
-  "repository": "https://github.com/ModDota/find-steam-app",
+  "repository": "https://github.com/ciberusps/find-steam-app",
   "license": "MIT",
   "author": "ark120202",
   "files": [
