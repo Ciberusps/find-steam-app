@@ -11,18 +11,22 @@ import {
   findSteamAppByName,
   findSteamAppManifest,
   findSteamLibraries,
-} from 'find-steam-app';
+} from "find-steam-app";
 
 await findSteamAppById(570);
 // => '/path/to/steam/steamapps/common/dota 2 beta'
 
-await findSteamAppByName('dota 2 beta');
+await findSteamAppByName("dota 2 beta");
 // => '/path/to/steam/steamapps/common/dota 2 beta'
 
 await findSteam();
 // => '/path/to/steam'
 
 await findSteamLibraries();
+// => ['/path/to/steam/steamapps', '/path/to/library/steamapps']
+
+// TODO:
+await findSteamApps();
 // => ['/path/to/steam/steamapps', '/path/to/library/steamapps']
 
 await findSteamAppManifest(570);
