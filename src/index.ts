@@ -1,6 +1,5 @@
 import fs from "fs-extra";
 import pFilter from "p-filter";
-import path from "path";
 // import globby from "globby";
 import util from "util";
 // @ts-ignore
@@ -9,7 +8,7 @@ import getFolderSize from "get-folder-size";
 import {
   loadSteamLibraries,
   loadSteamLibrariesPaths,
-  LibraryFolderNew,
+  SteamLibraryFolder,
 } from "./libraries";
 import {
   AppManifest,
@@ -21,7 +20,7 @@ import {
 import { findSteam } from "./steam";
 import { getAppInstallFolder } from "./utils";
 
-export { AppManifest, findSteam, LibraryFolderNew };
+export { AppManifest, findSteam, SteamLibraryFolder as LibraryFolderNew };
 
 const getFolderSizeAsync = util.promisify(getFolderSize);
 
@@ -77,13 +76,21 @@ export async function findSteamAppManifest(appId: number) {
 // TODO: dont work, example dota2 installed on D moved on F,
 // but also was in E, result path is E should be F
 export async function findSteamAppByName(name: string) {
-  const libs = await findSteamLibrariesPaths();
-  const [library] = await pFilter(libs, (lib) =>
-    fs.pathExists(path.join(lib, "common", name))
-  );
-  if (library == null) return;
+  const libsPaths = await findSteamLibrariesPaths();
+  const appsPaths = libsPaths.map((lib) => getAppInstallFolder(lib, name));
+  if (!appsPaths) return;
 
-  return path.join(library, "common", name);
+  const appsWithSize = await Promise.all(
+    appsPaths.map(async (appPath) => {
+      const appInstallFolder = appPath;
+      const isExists = await fs.pathExists(appInstallFolder);
+      const size = isExists ? await getFolderSizeAsync(appInstallFolder) : 0;
+      return { appInstallFolder: appPath, size };
+    })
+  );
+
+  const resultLib = appsWithSize.sort((a, b) => b.size - a.size)[0];
+  return resultLib.appInstallFolder;
 }
 
 /**
@@ -92,19 +99,21 @@ export async function findSteamAppByName(name: string) {
  * @returns Path to installed app.
  */
 export async function findSteamAppById(appId: number) {
-  const libs = await findSteamLibrariesPaths();
-  const libraries = await pFilter(libs, (lib) => hasManifest(lib, appId));
-  if (libraries == null) return;
+  const libsPaths = await findSteamLibrariesPaths();
+  const libs = await pFilter(libsPaths, (lib) => hasManifest(lib, appId));
+  if (!libs) return;
 
-  const manifestsPromises = libraries.map(async (lib) => {
-    const manifest = await readManifest(lib, appId);
-    const appInstallFolder = getAppInstallFolder(lib, manifest);
-    const isExist = await fs.pathExists(appInstallFolder);
-    const size = isExist ? await getFolderSizeAsync(appInstallFolder) : 0;
-    return { lib, appInstallFolder, size };
-  });
-  const libsWithSize = await Promise.all(manifestsPromises);
-  const resultLib = libsWithSize.sort((a, b) => b.size - a.size)[0];
+  const appsWithSize = await Promise.all(
+    libs.map(async (lib) => {
+      const manifest = await readManifest(lib, appId);
+      const appInstallFolder = getAppInstallFolder(lib, manifest.installdir);
+      const isExist = await fs.pathExists(appInstallFolder);
+      const size = isExist ? await getFolderSizeAsync(appInstallFolder) : 0;
+      return { lib, appInstallFolder, size };
+    })
+  );
+
+  const resultLib = appsWithSize.sort((a, b) => b.size - a.size)[0];
   return resultLib.appInstallFolder;
 }
 

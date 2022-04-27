@@ -2,6 +2,12 @@
 
 > Find location of an installed Steam app
 
+## Support
+
+- Windows ✅
+- osx - not tested
+- linux - not tested
+
 ## Usage
 
 ```ts
@@ -44,3 +50,12 @@ For more information about manifest, see [manifest.ts](src/manifest.ts)
 ##
 
 - при переносе игры manifest остается в старой папке и становится нечитаемым, добавляется файл `*.acf.tmp.save` и
+
+## Edge cases
+
+- after uninstall app folder in "common" still exist
+- after moving app folder in another library `manifest` still exists in old library but became encrypted and `*.acf.tmp.save` manifest created near
+
+## TODO
+
+- if `libraryfolders.vdf` modern and dont have single "paths"
