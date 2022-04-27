@@ -12,14 +12,8 @@ import {
   SteamLibraries,
   SteamLibraryFolder,
 } from "./libraries";
-import {
-  AppManifest,
-  findLibrariesManifests,
-  // findLibraryManifests,
-  hasManifest,
-  readManifest,
-} from "./manifest";
-import { findSteam } from "./steam";
+import { AppManifest, hasManifest, readManifest } from "./manifest";
+import { findSteamPath } from "./steam";
 import { findAppLibraryInV2Libraries, getAppInstallFolder } from "./utils";
 
 class SteamNotFoundError extends Error {
@@ -35,7 +29,7 @@ class SteamNotFoundError extends Error {
  * @returns Array of paths to library folders.
  */
 export async function findSteamLibrariesPaths() {
-  const steam = await findSteam();
+  const steam = await findSteamPath();
   if (steam == null) throw new SteamNotFoundError();
 
   return loadSteamLibrariesPaths(steam);
@@ -47,7 +41,7 @@ export async function findSteamLibrariesPaths() {
  * @returns Array of paths to library folders.
  */
 export async function findSteamLibraries(): Promise<SteamLibraries> {
-  const steam = await findSteam();
+  const steam = await findSteamPath();
   if (steam == null) throw new SteamNotFoundError();
 
   return loadSteamLibraries(steam);
@@ -135,35 +129,79 @@ export async function findSteamAppById(appId: number): Promise<string> {
   throw new Error("App not found");
 }
 
+interface SteamApp {
+  appId: number;
+  path: string;
+  // library?: SteamLibraryFolder | string;
+  manifest: AppManifest;
+  // exePath?: string;
+}
+
+type SteamLibrary = {
+  apps: SteamApp[];
+  // SteamLibraryFolder props
+  path: string;
+  label: string;
+  contentid: number;
+  totalsize: number;
+  update_clean_bytes_tally: number;
+  time_last_update_corruption: number;
+};
+
+type SteamLibraryOld = {
+  path: string;
+  apps: SteamApp[];
+};
+
+type SteamInfo = {
+  version: "v1" | "v2";
+  libraries?: SteamLibrary[];
+  oldLibraries?: SteamLibraryOld[];
+};
+
 /**
  * Searches for apps in local Steam libraries.
  *
  * @returns Path to installed app.
  */
-export async function findSteamApps() {
-  console.log("_______findSteamApps_______");
+export async function findSteam(): Promise<SteamInfo> {
+  const steamLibs = await findSteamLibraries();
+  if (steamLibs.version === "v2" && steamLibs.libraries) {
+    const appsPromises = steamLibs.libraries.map((lib) =>
+      Object.keys(lib.apps).map((appId) => readManifest(lib.path, Number(appId)))
+    );
+    const apps = await Promise.all(appsPromises.flat());
+    const appsManifests = apps.filter(Boolean) as AppManifest[];
 
-  const libs = await findSteamLibrariesPaths();
-  console.log(libs);
+    const steamLibsWithApps: SteamLibrary[] = [];
+    steamLibs.libraries.forEach((lib) => {
+      const steamApps: SteamApp[] = [];
+      Object.keys(lib.apps).forEach((appId) => {
+        const manifest = appsManifests.find((app) => app.appid === Number(appId));
+        if (manifest) {
+          steamApps.push({
+            appId: Number(appId),
+            path: getAppInstallFolder(lib.path, manifest.installdir),
+            manifest,
+            // library: lib,
+          });
+        }
+      });
+      steamLibsWithApps.push({ ...lib, apps: steamApps });
+    });
 
-  // let appsManifests: AppManifest[] = [];
-  // const libPromises = libs.map((lib) => {
-  //   return globby("*.acf", {
-  //     cwd: lib,
-  //     // absolute: true,
-  //     globstar: false,
-  //   });
-  //   // appsManifests
-  // });
+    console.log(steamLibsWithApps);
+    return { version: steamLibs.version, ...steamLibsWithApps };
+  }
 
-  // const res = await Promise.all(libPromises);
-  console.log(await findLibrariesManifests(libs));
-
-  // const [library] = await pFilter(libs, (lib) => hasManifest(lib, appId));
-  // if (library == null) return;
-
-  // const manifest = await readManifest(library, appId);
-  // return path.join(library, "common", manifest.installdir);
+  throw new Error("Apps not found");
 }
 
-export { AppManifest, SteamLibraryFolder, SteamNotFoundError, findSteam };
+export {
+  AppManifest,
+  SteamLibraryFolder,
+  SteamLibrary,
+  SteamNotFoundError,
+  SteamApp,
+  findSteamPath,
+};

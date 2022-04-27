@@ -25,7 +25,7 @@ await findSteamAppById(570);
 await findSteamAppByName("dota 2 beta");
 // => '/path/to/steam/steamapps/common/dota 2 beta'
 
-await findSteam();
+await findSteamPath();
 // => '/path/to/steam'
 
 const libs = await findSteamLibrariesPaths();
@@ -39,7 +39,7 @@ await findSteamLibraries();
 // => [{ path: '/path/to/library/steamapps', totalsize: 41234, apps: ['570'], ... }, ...]
 
 // TODO:
-await findSteamApps({ enableBullshetFilter: true });
+await findSteam({ enableBullshetFilter: true });
 // => ['/path/to/steam/steamapps', '/path/to/library/steamapps']
 
 await findSteamAppManifest(570);

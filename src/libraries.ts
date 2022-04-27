@@ -4,7 +4,7 @@ import path from "path";
 import vdf from "vdf-extra";
 import { getLibraryAppsManifestsFolder, joinAndNormalize } from "./utils";
 
-export interface SteamLibraryFolder {
+export type SteamLibraryFolder = {
   path: string;
   label: string;
   contentid: number;
@@ -12,7 +12,7 @@ export interface SteamLibraryFolder {
   update_clean_bytes_tally: number;
   time_last_update_corruption: number;
   apps: { [id: string]: number };
-}
+};
 
 export interface SteamLibraries {
   version: "v1" | "v2";

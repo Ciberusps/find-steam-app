@@ -32,16 +32,6 @@ export interface AppManifest {
   };
 }
 
-export const findLibrariesManifests = async (libs: string[]) => {
-  const libPromises = libs.map(findLibraryManifests);
-  const res = await Promise.all(libPromises);
-  return res;
-};
-
-export const findLibraryManifests = async (libraryPath: string) => {
-  return fs.readdir(libraryPath);
-};
-
 export async function hasManifest(libraryPath: string, appid: number) {
   const libraryManifestsFolder = getLibraryAppsManifestsFolder(libraryPath);
   const manifestPath = joinAndNormalize(

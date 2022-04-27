@@ -12,7 +12,7 @@ import {
   findSteamLibraries,
   findSteamLibrariesPaths,
 } from "../index";
-import { findSteam } from "../steam";
+import { findSteamPath } from "../steam";
 import { joinAndNormalize } from "../utils";
 
 import { mockLoad, steamFolder } from "./utils";
@@ -21,7 +21,7 @@ jest.mock("../steam", () => {
   const originalModule = jest.requireActual("../steam");
   return {
     ...originalModule,
-    findSteam: jest.fn().mockImplementation(() => steamFolder),
+    findSteamPath: jest.fn().mockImplementation(() => steamFolder),
   };
 });
 
@@ -53,8 +53,8 @@ describe("SteamLibraries v1", () => {
     mock.restore();
   });
 
-  test("findSteam", async () => {
-    const steamPath = await findSteam();
+  test("findSteamPath", async () => {
+    const steamPath = await findSteamPath();
 
     expect(steamPath).toBeTruthy();
     expect(steamPath).toBe(steamFolder);

@@ -46,7 +46,7 @@ async function windows() {
  *
  * @returns Location of Steam. `undefined` if Steam wasn't found.
  */
-export async function findSteam() {
+export async function findSteamPath() {
   switch (process.platform) {
     case "win32":
       return windows();

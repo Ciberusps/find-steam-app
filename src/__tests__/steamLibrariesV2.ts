@@ -5,10 +5,11 @@ import path from "path";
 import {
   findSteamAppById,
   findSteamAppByName,
+  findSteam,
   findSteamLibraries,
   findSteamLibrariesPaths,
 } from "../index";
-import { findSteam } from "../steam";
+import { findSteamPath } from "../steam";
 import { joinAndNormalize } from "../utils";
 
 import { mockLoad, steamFolder } from "./utils";
@@ -17,7 +18,7 @@ jest.mock("../steam", () => {
   const originalModule = jest.requireActual("../steam");
   return {
     ...originalModule,
-    findSteam: jest.fn().mockImplementation(() => steamFolder),
+    findSteamPath: jest.fn().mockImplementation(() => steamFolder),
   };
 });
 
@@ -35,18 +36,18 @@ describe("SteamLibraries v2", () => {
     mock.restore();
   });
 
-  test("findSteam", async () => {
-    const steamPath = await findSteam();
+  test("findSteamPath", async () => {
+    const result = await findSteamPath();
 
-    expect(steamPath).toBeTruthy();
-    expect(steamPath).toBe(steamFolder);
+    expect(result).toBeTruthy();
+    expect(result).toBe(steamFolder);
   });
 
   test("findSteamLibrariesPaths", async () => {
-    const steamPaths = await findSteamLibrariesPaths();
+    const result = await findSteamLibrariesPaths();
 
-    expect(steamPaths).toBeTruthy();
-    expect(steamPaths).toEqual([
+    expect(result).toBeTruthy();
+    expect(result).toEqual([
       joinAndNormalize(steamFolder),
       joinAndNormalize("d/SteamLibrary"),
       joinAndNormalize("e/SteamLibrary"),
@@ -55,10 +56,10 @@ describe("SteamLibraries v2", () => {
   });
 
   test("findSteamLibraries", async () => {
-    const steamPaths = await findSteamLibraries();
+    const result = await findSteamLibraries();
 
-    expect(steamPaths).toBeTruthy();
-    expect(steamPaths).toMatchObject({
+    expect(result).toBeTruthy();
+    expect(result).toMatchObject({
       version: "v2",
       libraries: [
         {
@@ -79,19 +80,24 @@ describe("SteamLibraries v2", () => {
 
   test("findSteamAppById", async () => {
     // edge case search, described in README.md
-    const steamAppById = await findSteamAppById(570);
-    expect(steamAppById).toBeTruthy();
-    expect(steamAppById).toBe(
-      path.normalize("f/SteamLibrary/steamapps/common/dota 2 beta")
-    );
+    const result = await findSteamAppById(570);
+    expect(result).toBeTruthy();
+    expect(result).toBe(path.normalize("f/SteamLibrary/steamapps/common/dota 2 beta"));
   });
 
   test("findSteamAppName", async () => {
     // edge case search, described in README.md
-    const steamAppById = await findSteamAppByName("dota 2 beta");
+    const result = await findSteamAppByName("dota 2 beta");
+    expect(result).toBeTruthy();
+    expect(result).toBe(path.normalize("f/SteamLibrary/steamapps/common/dota 2 beta"));
+  });
+
+  test("findSteam", async () => {
+    const steamAppById = await findSteam();
     expect(steamAppById).toBeTruthy();
-    expect(steamAppById).toBe(
-      path.normalize("f/SteamLibrary/steamapps/common/dota 2 beta")
-    );
+    // TODO:
+    // expect(steamAppById).toBe(
+    //   path.normalize("f/SteamLibrary/steamapps/common/dota 2 beta")
+    // );
   });
 });
