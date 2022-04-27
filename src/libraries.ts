@@ -2,6 +2,7 @@ import fs from "fs-extra";
 import uniqBy from "lodash.uniqby";
 import path from "path";
 import vdf from "vdf-extra";
+import { getLibraryFolder } from "./utils";
 
 export interface SteamLibraryFolder {
   path: string;
@@ -32,7 +33,7 @@ export async function loadSteamLibrariesPaths(steam: string): Promise<string[]> 
   const libraries = Object.entries(libraryFoldersData)
     .filter(([id]) => !isNaN(Number(id)))
     .map(([, libPath]) =>
-      path.join(typeof libPath === "string" ? libPath : libPath.path, "steamapps")
+      getLibraryFolder(typeof libPath === "string" ? libPath : libPath.path)
     );
 
   return uniqBy([mainSteamApps, ...libraries], String);
@@ -49,11 +50,13 @@ export async function loadSteamLibraries(steam: string): Promise<SteamLibraries>
   );
   // libraries[0][1] = "fklajdfk";
   const isV1 = libraries.some(([_, val]) => typeof val === "string");
-  console.log({ libraries: JSON.stringify(libraries, null, 2), isV1 });
+  // console.log({ libraries: JSON.stringify(libraries, null, 2), isV1 });
 
   if (isV1) {
     const oldLibraries = uniqBy(
-      libraries.map(([, val]) => (typeof val === "string" ? val : val.path)),
+      libraries.map(([, val]) =>
+        getLibraryFolder(typeof val === "string" ? val : val.path)
+      ),
       String
     );
     return {
@@ -61,9 +64,16 @@ export async function loadSteamLibraries(steam: string): Promise<SteamLibraries>
       oldLibraries,
     };
   } else {
+    let librariesV2 = libraries.map(([_, val]) => val) as SteamLibraryFolder[];
+    librariesV2 = librariesV2.map((val) => ({
+      ...val,
+      path: getLibraryFolder(val.path),
+    }));
+    librariesV2 = uniqBy(librariesV2, "path");
+
     return {
       version: "v2",
-      libraries: uniqBy(libraries, "path").map(([, val]) => val) as SteamLibraryFolder[],
+      libraries: librariesV2 as SteamLibraryFolder[],
     };
   }
 }

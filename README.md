@@ -51,6 +51,10 @@ For more information about manifest, see [manifest.ts](src/manifest.ts)
 
 - при переносе игры manifest остается в старой папке и становится нечитаемым, добавляется файл `*.acf.tmp.save` и
 
+- library v1 и v2 отличаются только методом опеределения какое из приложений реально установленно
+  - в v1 мы находим manifest'ы и если приложение в нескольких libraries, то сравниваем вес этих папок, та что весит тяжелее побеждает
+  - в v2 источником правды является `libraryfolders.vdf`, что указано в library.apps, то и установлено
+
 ## Edge cases
 
 - after uninstall app folder in "common" still exist
