@@ -1,0 +1,51 @@
+"AppState"
+{
+	"appid"		"374320"
+	"Universe"		"1"
+	"LauncherPath"		"C:\\Program Files (x86)\\Steam\\steam.exe"
+	"name"		"DARK SOULS™ III"
+	"StateFlags"		"4"
+	"installdir"		"DARK SOULS III"
+	"LastUpdated"		"1633980596"
+	"UpdateResult"		"0"
+	"SizeOnDisk"		"26662618586"
+	"buildid"		"2054196"
+	"LastOwner"		"76561198118175531"
+	"BytesToDownload"		"4695891936"
+	"BytesDownloaded"		"4695891936"
+	"BytesToStage"		"4829626555"
+	"BytesStaged"		"4829626555"
+	"AutoUpdateBehavior"		"0"
+	"AllowOtherDownloadsWhileRunning"		"0"
+	"ScheduledAutoUpdate"		"0"
+	"StagingFolder"		"1"
+	"InstalledDepots"
+	{
+		"374321"
+		{
+			"manifest"		"4471176929659548333"
+			"size"		"21832992031"
+		}
+		"506970"
+		{
+			"manifest"		"2441039608905796121"
+			"size"		"1684575628"
+			"dlcappid"		"506970"
+		}
+		"506971"
+		{
+			"manifest"		"266039425715139370"
+			"size"		"3145050927"
+			"dlcappid"		"506971"
+		}
+	}
+	"SharedDepots"
+	{
+		"228984"		"228980"
+		"228990"		"228980"
+	}
+	"UserConfig"
+	{
+		"language"		"english"
+	}
+}

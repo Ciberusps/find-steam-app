@@ -1,0 +1,60 @@
+"AppState"
+{
+	"appid"		"1245620"
+	"Universe"		"1"
+	"LauncherPath"		"C:\\Program Files (x86)\\Steam\\steam.exe"
+	"name"		"ELDEN RING"
+	"StateFlags"		"4"
+	"installdir"		"ELDEN RING"
+	"LastUpdated"		"1650359574"
+	"UpdateResult"		"0"
+	"SizeOnDisk"		"54754624931"
+	"buildid"		"8562480"
+	"LastOwner"		"76561198118175531"
+	"BytesToDownload"		"927787808"
+	"BytesDownloaded"		"927787808"
+	"BytesToStage"		"49751081405"
+	"BytesStaged"		"49751081405"
+	"AutoUpdateBehavior"		"0"
+	"AllowOtherDownloadsWhileRunning"		"0"
+	"ScheduledAutoUpdate"		"0"
+	"StagingFolder"		"3"
+	"InstalledDepots"
+	{
+		"1245621"
+		{
+			"manifest"		"8069659878263483524"
+			"size"		"52742779807"
+		}
+		"1245624"
+		{
+			"manifest"		"3842441351441332671"
+			"size"		"83439402"
+		}
+		"1896300"
+		{
+			"manifest"		"1676464084021469100"
+			"size"		"1058511414"
+			"dlcappid"		"1896300"
+		}
+		"1896320"
+		{
+			"manifest"		"689917599357770984"
+			"size"		"869928022"
+			"dlcappid"		"1896320"
+		}
+	}
+	"InstallScripts"
+	{
+		"1245621"		"Game\\EasyAntiCheat\\install_script.vdf"
+	}
+	"SharedDepots"
+	{
+		"228988"		"228980"
+		"228990"		"228980"
+	}
+	"UserConfig"
+	{
+		"language"		"english"
+	}
+}

@@ -1,0 +1,83 @@
+"AppState"
+{
+	"appid"		"570"
+	"Universe"		"1"
+	"LauncherPath"		"C:\\Program Files (x86)\\Steam\\steam.exe"
+	"name"		"Dota 2"
+	"StateFlags"		"4"
+	"installdir"		"dota 2 beta"
+	"LastUpdated"		"1633652111"
+	"UpdateResult"		"0"
+	"SizeOnDisk"		"35143503150"
+	"buildid"		"7498076"
+	"LastOwner"		"76561198118175531"
+	"BytesToDownload"		"0"
+	"BytesDownloaded"		"0"
+	"BytesToStage"		"0"
+	"BytesStaged"		"0"
+	"AutoUpdateBehavior"		"0"
+	"AllowOtherDownloadsWhileRunning"		"0"
+	"ScheduledAutoUpdate"		"0"
+	"InstalledDepots"
+	{
+		"373301"
+		{
+			"manifest"		"7015183466150285914"
+			"size"		"7382245398"
+		}
+		"381451"
+		{
+			"manifest"		"470557505544468788"
+			"size"		"2151563958"
+		}
+		"381452"
+		{
+			"manifest"		"6814194031903900951"
+			"size"		"2149788014"
+		}
+		"381453"
+		{
+			"manifest"		"1139200004934659419"
+			"size"		"2147268828"
+		}
+		"381454"
+		{
+			"manifest"		"7647068797861452834"
+			"size"		"2133763713"
+		}
+		"381455"
+		{
+			"manifest"		"6394805897667091831"
+			"size"		"16907677105"
+		}
+		"373302"
+		{
+			"manifest"		"5213909582823641022"
+			"size"		"1306853847"
+		}
+		"373303"
+		{
+			"manifest"		"8266256603189145"
+			"size"		"379594973"
+		}
+		"373305"
+		{
+			"manifest"		"4435851250675935801"
+			"size"		"0"
+		}
+		"381456"
+		{
+			"manifest"		"5425063725991897591"
+			"size"		"584747314"
+		}
+	}
+	"SharedDepots"
+	{
+		"228983"		"228980"
+		"228990"		"228980"
+	}
+	"UserConfig"
+	{
+		"language"		"russian"
+	}
+}
