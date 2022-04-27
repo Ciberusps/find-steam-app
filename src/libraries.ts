@@ -48,8 +48,7 @@ export async function loadSteamLibraries(steam: string): Promise<SteamLibraries>
   const libraries = Object.entries(libraryFoldersData).filter(
     ([id]) => !isNaN(Number(id))
   );
-  const isV1 = true;
-  // const isV1 = libraries.some(([_, val]) => typeof val === "string");
+  const isV1 = libraries.some(([_, val]) => typeof val === "string");
   // console.log({ libraries: JSON.stringify(libraries, null, 2), isV1 });
 
   if (isV1) {

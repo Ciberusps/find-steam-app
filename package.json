@@ -28,7 +28,7 @@
     "lint:prettier": "prettier --check **/*.{js,jsx,ts,tsx,json,css,scss,md}",
     "fix:prettier": "prettier --write **/*.{js,jsx,ts,tsx,json,css,scss,md}",
     "typecheck": "tsc --noEmit",
-    "test": "jest",
+    "test": "jest --runInBand",
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
@@ -37,7 +37,6 @@
     "get-folder-size": "^2.0.1",
     "globby": "^11.1.0",
     "lodash.uniqby": "^4.7.0",
-    "memfs": "^3.4.1",
     "mock-fs": "^5.1.2",
     "p-filter": "^2.1.0",
     "vdf-extra": "^2.2.2"
@@ -47,6 +46,7 @@
     "@types/fs-extra": "^5.1.0",
     "@types/jest": "^27.4.1",
     "@types/lodash.uniqby": "^4.7.7",
+    "@types/mock-fs": "^4.13.1",
     "@typescript-eslint/eslint-plugin": "^5.21.0",
     "@typescript-eslint/parser": "^5.21.0",
     "eslint": "^8.14.0",
