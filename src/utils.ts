@@ -6,7 +6,7 @@ export const getAppInstallFolder = (library: string, name: string) => {
 };
 
 export const getLibraryFolder = (library: string) => {
-  return path.join(library, "steamapps");
+  return path.normalize(path.join(library, "steamapps"));
 };
 
 export const findAppLibraryInV2Libraries = (
