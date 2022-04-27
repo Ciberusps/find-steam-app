@@ -47,8 +47,11 @@ async function windows() {
  * @returns Location of Steam. `undefined` if Steam wasn't found.
  */
 export async function findSteam() {
+  console.log("WHY EBAT");
   switch (process.platform) {
     case "win32":
+      console.log("WHY EBAT2", windows());
+
       return windows();
     case "linux":
       return pathIfExists(`${process.env.HOME}/.local/share/Steam`);

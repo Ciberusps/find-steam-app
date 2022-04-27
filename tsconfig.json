@@ -19,5 +19,5 @@
     "rootDir": "./src",
     "outDir": "./lib"
   },
-  "exclude": ["node_modules", "scripts", "__tests__"]
+  "exclude": ["node_modules", "scripts"]
 }

@@ -37,6 +37,8 @@
     "get-folder-size": "^2.0.1",
     "globby": "^11.1.0",
     "lodash.uniqby": "^4.7.0",
+    "memfs": "^3.4.1",
+    "mock-fs": "^5.1.2",
     "p-filter": "^2.1.0",
     "vdf-extra": "^2.2.2"
   },
