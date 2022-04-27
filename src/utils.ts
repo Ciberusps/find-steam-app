@@ -2,7 +2,7 @@ import path from "path";
 import { SteamLibraryFolder } from "./libraries";
 
 export const getAppInstallFolder = (library: string, name: string) => {
-  return path.join(library, "common", name);
+  return path.normalize(path.join(library, "common", name));
 };
 
 export const getLibraryFolder = (library: string) => {
