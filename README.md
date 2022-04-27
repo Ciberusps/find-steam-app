@@ -5,8 +5,8 @@
 ## Support
 
 - Windows ✅
-- osx - not tested
-- linux - not tested
+- osx - ⚠️not tested
+- linux - ⚠️not tested
 
 ## Usage
 
