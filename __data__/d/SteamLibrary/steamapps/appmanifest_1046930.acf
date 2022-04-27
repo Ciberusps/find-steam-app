@@ -1,0 +1,38 @@
+"AppState"
+{
+	"appid"		"1046930"
+	"Universe"		"1"
+	"LauncherPath"		"C:\\Program Files (x86)\\Steam\\steam.exe"
+	"name"		"Dota Underlords"
+	"StateFlags"		"4"
+	"installdir"		"Underlords"
+	"LastUpdated"		"1639879104"
+	"UpdateResult"		"0"
+	"SizeOnDisk"		"3185955857"
+	"buildid"		"7844185"
+	"LastOwner"		"76561198118175531"
+	"BytesToDownload"		"59989904"
+	"BytesDownloaded"		"59989904"
+	"BytesToStage"		"798057618"
+	"BytesStaged"		"798057618"
+	"AutoUpdateBehavior"		"0"
+	"AllowOtherDownloadsWhileRunning"		"0"
+	"ScheduledAutoUpdate"		"0"
+	"InstalledDepots"
+	{
+		"1046931"
+		{
+			"manifest"		"2300734671692958558"
+			"size"		"2434037491"
+		}
+		"1046932"
+		{
+			"manifest"		"2854185046816399389"
+			"size"		"751918366"
+		}
+	}
+	"UserConfig"
+	{
+		"language"		"english"
+	}
+}

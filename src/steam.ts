@@ -2,8 +2,16 @@ import execa from "execa";
 import fs from "fs-extra";
 import path from "path";
 
+export class SteamNotFoundError extends Error {
+  public constructor() {
+    super("Steam installation directory not found");
+    this.name = "SteamNotFoundError";
+  }
+}
+
 const pathIfExists = async (name: string) =>
   (await fs.pathExists(name)) ? name : undefined;
+
 const getRegExePath = () =>
   process.platform === "win32" && process.env.windir != null
     ? path.join(process.env.windir, "System32", "reg.exe")
@@ -45,7 +53,7 @@ async function windows() {
  *
  * @returns Location of Steam. `undefined` if Steam wasn't found.
  */
-export async function findSteam() {
+export async function findSteamPath() {
   switch (process.platform) {
     case "win32":
       return windows();

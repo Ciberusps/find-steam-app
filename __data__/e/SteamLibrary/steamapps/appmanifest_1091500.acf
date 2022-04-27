@@ -1,0 +1,44 @@
+"AppState"
+{
+	"appid"		"1091500"
+	"Universe"		"1"
+	"LauncherPath"		"C:\\Program Files (x86)\\Steam\\steam.exe"
+	"name"		"Cyberpunk 2077"
+	"StateFlags"		"4"
+	"installdir"		"Cyberpunk 2077"
+	"LastUpdated"		"1649172927"
+	"UpdateResult"		"0"
+	"SizeOnDisk"		"71715581952"
+	"buildid"		"8480393"
+	"LastOwner"		"76561198118175531"
+	"BytesToDownload"		"35280"
+	"BytesDownloaded"		"35280"
+	"BytesToStage"		"249579"
+	"BytesStaged"		"249579"
+	"AutoUpdateBehavior"		"0"
+	"AllowOtherDownloadsWhileRunning"		"0"
+	"ScheduledAutoUpdate"		"0"
+	"StagingFolder"		"3"
+	"InstalledDepots"
+	{
+		"1091501"
+		{
+			"manifest"		"5869743417560122937"
+			"size"		"68523907975"
+		}
+		"1495710"
+		{
+			"manifest"		"6105760403137189353"
+			"size"		"3191673977"
+			"dlcappid"		"1495710"
+		}
+	}
+	"SharedDepots"
+	{
+		"228988"		"228980"
+	}
+	"UserConfig"
+	{
+		"language"		"english"
+	}
+}
