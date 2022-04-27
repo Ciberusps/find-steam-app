@@ -3,7 +3,7 @@
 	"contentstatsid"		"7951992527043115695"
 	"0"
 	{
-		"path"		"c\\Program Files (x86)\\Steam"
+		"path"		"c/Program Files (x86)/Steam"
 		"label"		""
 		"contentid"		"7951992527043115695"
 		"totalsize"		"0"
@@ -16,7 +16,7 @@
 	}
 	"1"
 	{
-		"path"		"d\\SteamLibrary"
+		"path"		"d/SteamLibrary"
 		"label"		""
 		"contentid"		"3899544077234356229"
 		"totalsize"		"1000169537536"
@@ -30,7 +30,7 @@
 	}
 	"2"
 	{
-		"path"		"e\\SteamLibrary"
+		"path"		"e/SteamLibrary"
 		"label"		""
 		"contentid"		"5459420990717953052"
 		"totalsize"		"523611664384"
@@ -51,7 +51,7 @@
 	}
 	"3"
 	{
-		"path"		"f\\SteamLibrary"
+		"path"		"f/SteamLibrary"
 		"label"		""
 		"contentid"		"5185792022625312364"
 		"totalsize"		"1000186310656"

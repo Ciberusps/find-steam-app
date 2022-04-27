@@ -14,7 +14,7 @@ jest.mock("../src/steam", () => {
   const originalModule = jest.requireActual("../src/steam");
   return {
     ...originalModule,
-    findSteam: () => steamFolder,
+    findSteam: jest.fn().mockImplementation(() => steamFolder),
   };
 });
 
