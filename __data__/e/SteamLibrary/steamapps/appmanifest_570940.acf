@@ -1,0 +1,42 @@
+"AppState"
+{
+	"appid"		"570940"
+	"Universe"		"1"
+	"LauncherPath"		"C:\\Program Files (x86)\\Steam\\steam.exe"
+	"name"		"DARK SOULS™: REMASTERED"
+	"StateFlags"		"4"
+	"installdir"		"DARK SOULS REMASTERED"
+	"LastUpdated"		"1642931341"
+	"UpdateResult"		"0"
+	"SizeOnDisk"		"7373208059"
+	"buildid"		"2921691"
+	"LastOwner"		"76561198118175531"
+	"BytesToDownload"		"7031528768"
+	"BytesDownloaded"		"7031528768"
+	"BytesToStage"		"7373208059"
+	"BytesStaged"		"7373208059"
+	"AutoUpdateBehavior"		"0"
+	"AllowOtherDownloadsWhileRunning"		"0"
+	"ScheduledAutoUpdate"		"0"
+	"InstalledDepots"
+	{
+		"570941"
+		{
+			"manifest"		"2900566705832487094"
+			"size"		"7316141051"
+		}
+		"570943"
+		{
+			"manifest"		"2107856317364082295"
+			"size"		"57067008"
+		}
+	}
+	"SharedDepots"
+	{
+		"228986"		"228980"
+	}
+	"UserConfig"
+	{
+		"language"		"english"
+	}
+}

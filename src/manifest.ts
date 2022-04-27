@@ -1,8 +1,9 @@
 import fs from "fs-extra";
-import path from "path";
 import vdf from "vdf-extra";
 
-export interface AppManifest {
+import { getAppsManifestsFolder, joinAndNormalize } from "./utils";
+
+export interface IAppManifest {
   appid: number;
   Universe: number;
   name: string;
@@ -32,22 +33,46 @@ export interface AppManifest {
   };
 }
 
-export async function hasManifest(library: string, appid: number) {
-  return fs.pathExists(path.join(library, `appmanifest_${appid}.acf`));
+export async function hasManifest(libraryPath: string, appid: number): Promise<boolean> {
+  const libraryManifestsFolder = getAppsManifestsFolder(libraryPath);
+  const manifestPath = joinAndNormalize(
+    libraryManifestsFolder,
+    `appmanifest_${appid}.acf`
+  );
+  return fs.pathExists(manifestPath);
 }
 
-export async function readManifest(library: string, appid: number) {
-  const manifestPath = path.join(library, `appmanifest_${appid}.acf`);
-  const manifestTempPath = path.join(library, `appmanifest_${appid}.acf.tmp.save`);
+export async function readManifest(
+  libraryPath: string,
+  appid: number
+): Promise<IAppManifest | null> {
+  const libraryManifestsFolder = getAppsManifestsFolder(libraryPath);
+  const manifestPath = joinAndNormalize(
+    libraryManifestsFolder,
+    `appmanifest_${appid}.acf`
+  );
 
   try {
-    // if manifest parse error try open temporary manifest(.acf.tmp.save)
     const manifestContent = await fs.readFile(manifestPath, "utf8");
-    const manifestData = vdf.parse<AppManifest>(manifestContent);
+    const manifestData = vdf.parse<IAppManifest>(manifestContent);
     return manifestData;
   } catch (err) {
-    const manifestContent = await fs.readFile(manifestTempPath, "utf8");
-    const manifestData = vdf.parse<AppManifest>(manifestContent);
-    return manifestData;
+    console.info(err);
   }
+  return null;
+}
+
+export async function findManifests(libraryPath: string): Promise<IAppManifest[]> {
+  const libraryManifestsFolder = getAppsManifestsFolder(libraryPath);
+  const manifestPaths = await fs.readdir(libraryManifestsFolder);
+  const manifests = await Promise.all(
+    manifestPaths
+      .filter((path) => path.startsWith("appmanifest_") && path.endsWith(".acf"))
+      .map((path) => {
+        const appId = Number(path.replace("appmanifest_", "").replace(".acf", ""));
+        const manifest = readManifest(libraryPath, appId);
+        return manifest;
+      })
+  );
+  return manifests.filter(Boolean) as IAppManifest[];
 }

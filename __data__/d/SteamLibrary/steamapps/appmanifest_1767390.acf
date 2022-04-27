@@ -1,0 +1,33 @@
+"AppState"
+{
+	"appid"		"1767390"
+	"Universe"		"1"
+	"LauncherPath"		"C:\\Program Files (x86)\\Steam\\steam.exe"
+	"name"		"Blood West Demo"
+	"StateFlags"		"4"
+	"installdir"		"Blood West Demo"
+	"LastUpdated"		"1633120240"
+	"UpdateResult"		"0"
+	"SizeOnDisk"		"317905204"
+	"buildid"		"7461698"
+	"LastOwner"		"76561198118175531"
+	"BytesToDownload"		"107020208"
+	"BytesDownloaded"		"107020208"
+	"BytesToStage"		"317905204"
+	"BytesStaged"		"317905204"
+	"AutoUpdateBehavior"		"0"
+	"AllowOtherDownloadsWhileRunning"		"0"
+	"ScheduledAutoUpdate"		"0"
+	"InstalledDepots"
+	{
+		"1767391"
+		{
+			"manifest"		"3186262175849258714"
+			"size"		"317905204"
+		}
+	}
+	"UserConfig"
+	{
+		"language"		"english"
+	}
+}

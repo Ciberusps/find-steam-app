@@ -2,8 +2,11 @@ import fs from "fs-extra";
 import uniqBy from "lodash.uniqby";
 import path from "path";
 import vdf from "vdf-extra";
+import { findSteamPath, SteamNotFoundError } from "./steam";
 
-export interface LibraryFolderNew {
+import { getAppsManifestsFolder, joinAndNormalize } from "./utils";
+
+export interface ISteamLibraryRaw {
   path: string;
   label?: string;
   contentid?: number;
@@ -13,48 +16,68 @@ export interface LibraryFolderNew {
   apps?: { [id: string]: number };
 }
 
-interface LibraryFolders {
-  [id: string]: LibraryFolderNew | string;
+export interface ISteamLibrariesRaw {
+  version: "v1" | "v2";
+  libraries: ISteamLibraryRaw[];
 }
 
-export async function loadSteamLibrariesPaths(steam: string): Promise<string[]> {
-  const mainSteamApps = path.join(steam, "steamapps");
+interface ILibraryFolders {
+  [id: string]: ISteamLibraryRaw | string;
+}
+
+export async function loadSteamLibrariesPaths(): Promise<string[]> {
+  const steam = await findSteamPath();
+  if (!steam) throw new SteamNotFoundError();
+
+  const mainSteamApps = getAppsManifestsFolder(steam);
   const libraryFoldersPath = path.join(mainSteamApps, "libraryfolders.vdf");
   const libraryFoldersContent = await fs.readFile(libraryFoldersPath, "utf8");
-  const libraryFoldersData = vdf.parse<LibraryFolders>(libraryFoldersContent);
+  const libraryFoldersData = vdf.parse<ILibraryFolders>(libraryFoldersContent);
 
   const libraries = Object.entries(libraryFoldersData)
     .filter(([id]) => !isNaN(Number(id)))
     .map(([, libPath]) =>
-      path.join(typeof libPath === "string" ? libPath : libPath.path, "steamapps")
+      joinAndNormalize(typeof libPath === "string" ? libPath : libPath.path)
     );
 
-  return uniqBy([mainSteamApps, ...libraries], String);
+  return uniqBy([joinAndNormalize(steam), ...libraries], String);
 }
 
-export async function loadSteamLibraries(steam: string): Promise<LibraryFolderNew[]> {
+export async function loadSteamLibraries(): Promise<ISteamLibrariesRaw> {
+  const steam = await findSteamPath();
+  if (!steam) throw new SteamNotFoundError();
+
   const mainSteamApps = path.join(steam, "steamapps");
   const libraryFoldersPath = path.join(mainSteamApps, "libraryfolders.vdf");
   const libraryFoldersContent = await fs.readFile(libraryFoldersPath, "utf8");
-  const libraryFoldersData = vdf.parse<LibraryFolders>(libraryFoldersContent);
+  const libraryFoldersData = vdf.parse<ILibraryFolders>(libraryFoldersContent);
 
-  console.log("libraryFoldersData", libraryFoldersData);
+  const steamLibs = Object.entries(libraryFoldersData).filter(
+    ([id]) => !isNaN(Number(id))
+  );
+  const isV1 = steamLibs.some(([_, val]) => typeof val === "string");
 
-  const libraries: LibraryFolderNew[] = Object.entries(libraryFoldersData)
-    .filter(([id]) => !isNaN(Number(id)))
-    .map(([, libPath]) => {
-      const exactLibPath = path.join(
-        typeof libPath === "string" ? libPath : libPath.path,
-        "steamapps"
-      );
-      if (typeof libPath === "string") {
-        return { path: exactLibPath };
-      }
-      return {
-        ...libPath,
-        path: exactLibPath,
-      };
-    });
+  if (isV1) {
+    let libs = steamLibs.map(([, val]) => ({
+      path: joinAndNormalize(typeof val === "string" ? val : val.path),
+    }));
+    libs = uniqBy(libs, "path");
 
-  return uniqBy([...libraries, { path: mainSteamApps }], "path");
+    return {
+      version: "v1",
+      libraries: libs as ISteamLibraryRaw[],
+    };
+  } else {
+    let libs = steamLibs.map(([_, val]) => val) as ISteamLibraryRaw[];
+    libs = libs.map((val) => ({
+      ...val,
+      path: joinAndNormalize(val.path),
+    }));
+    libs = uniqBy(libs, "path");
+
+    return {
+      version: "v2",
+      libraries: libs as ISteamLibraryRaw[],
+    };
+  }
 }

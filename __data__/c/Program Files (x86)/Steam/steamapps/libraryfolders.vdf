@@ -1,0 +1,65 @@
+"libraryfolders"
+{
+	"contentstatsid"		"7951992527043115695"
+	"0"
+	{
+		"path"		"c/Program Files (x86)/Steam"
+		"label"		""
+		"contentid"		"7951992527043115695"
+		"totalsize"		"0"
+		"update_clean_bytes_tally"		"7941570390"
+		"time_last_update_corruption"		"0"
+		"apps"
+		{
+			"228980"		"204600378"
+		}
+	}
+	"1"
+	{
+		"path"		"d/SteamLibrary"
+		"label"		""
+		"contentid"		"3899544077234356229"
+		"totalsize"		"1000169537536"
+		"update_clean_bytes_tally"		"24524550550"
+		"time_last_update_corruption"		"0"
+		"apps"
+		{
+			"1046930"		"3185955857"
+			"1767390"		"317905204"
+		}
+	}
+	"2"
+	{
+		"path"		"e/SteamLibrary"
+		"label"		""
+		"contentid"		"5459420990717953052"
+		"totalsize"		"523611664384"
+		"update_clean_bytes_tally"		"62061526466"
+		"time_last_update_corruption"		"0"
+		"apps"
+		{
+			"236430"		"14825904469"
+			"335300"		"19306237690"
+			"365670"		"703560577"
+			"374320"		"26662618586"
+			"387290"		"11058189790"
+			"570940"		"7373208059"
+			"1091500"		"71715581952"
+			"1245620"		"54754624931"
+			"1902490"		"4654605096"
+		}
+	}
+	"3"
+	{
+		"path"		"f/SteamLibrary"
+		"label"		""
+		"contentid"		"5185792022625312364"
+		"totalsize"		"1000186310656"
+		"update_clean_bytes_tally"		"10922453695"
+		"time_last_update_corruption"		"0"
+		"apps"
+		{
+			"570"		"38478425675"
+		}
+	}
+}

@@ -15,7 +15,11 @@
     "url": "https://github.com/ciberusps/find-steam-app"
   },
   "license": "MIT",
-  "author": "ark120202",
+  "author": {
+    "name": "Ciberusps",
+    "email": "ciberus.ps@gmail.com",
+    "url": "https://github.com/Ciberusps"
+  },
   "files": [
     "lib/**/*.{js,ts}"
   ],
@@ -28,24 +32,33 @@
     "lint:prettier": "prettier --check **/*.{js,jsx,ts,tsx,json,css,scss,md}",
     "fix:prettier": "prettier --write **/*.{js,jsx,ts,tsx,json,css,scss,md}",
     "typecheck": "tsc --noEmit",
+    "test": "jest --runInBand",
+    "test:locally": "ts-node src/scripts/test.ts",
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
     "execa": "^1.0.0",
-    "fs-extra": "^7.0.1",
+    "fs-extra": "^10.1.0",
+    "get-folder-size": "^2.0.1",
     "lodash.uniqby": "^4.7.0",
+    "mock-fs": "^5.1.2",
     "p-filter": "^2.1.0",
     "vdf-extra": "^2.2.2"
   },
   "devDependencies": {
     "@types/execa": "^0.9.0",
-    "@types/fs-extra": "^5.1.0",
+    "@types/fs-extra": "^9.0.13",
+    "@types/jest": "^27.4.1",
     "@types/lodash.uniqby": "^4.7.7",
+    "@types/mock-fs": "^4.13.1",
     "@typescript-eslint/eslint-plugin": "^5.21.0",
     "@typescript-eslint/parser": "^5.21.0",
     "eslint": "^8.14.0",
     "eslint-config-airbnb-base": "^15.0.0",
+    "jest": "^27.5.1",
     "prettier": "^2.6.2",
-    "typescript": "^4.6.3"
+    "ts-jest": "^27.1.4",
+    "ts-node": "^10.7.0",
+    "typescript": "4.5"
   }
 }
