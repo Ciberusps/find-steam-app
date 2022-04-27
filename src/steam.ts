@@ -4,6 +4,7 @@ import path from "path";
 
 const pathIfExists = async (name: string) =>
   (await fs.pathExists(name)) ? name : undefined;
+
 const getRegExePath = () =>
   process.platform === "win32" && process.env.windir != null
     ? path.join(process.env.windir, "System32", "reg.exe")

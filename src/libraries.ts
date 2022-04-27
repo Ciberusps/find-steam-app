@@ -38,8 +38,6 @@ export async function loadSteamLibraries(steam: string): Promise<LibraryFolderNe
   const libraryFoldersContent = await fs.readFile(libraryFoldersPath, "utf8");
   const libraryFoldersData = vdf.parse<LibraryFolders>(libraryFoldersContent);
 
-  console.log("libraryFoldersData", libraryFoldersData);
-
   const libraries: LibraryFolderNew[] = Object.entries(libraryFoldersData)
     .filter(([id]) => !isNaN(Number(id)))
     .map(([, libPath]) => {

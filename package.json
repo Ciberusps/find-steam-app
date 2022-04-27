@@ -33,6 +33,8 @@
   "dependencies": {
     "execa": "^1.0.0",
     "fs-extra": "^7.0.1",
+    "get-folder-size": "^2.0.1",
+    "globby": "^11.1.0",
     "lodash.uniqby": "^4.7.0",
     "p-filter": "^2.1.0",
     "vdf-extra": "^2.2.2"

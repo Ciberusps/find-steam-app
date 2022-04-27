@@ -32,6 +32,16 @@ export interface AppManifest {
   };
 }
 
+export const findLibrariesManifests = async (libs: string[]) => {
+  const libPromises = libs.map(findLibraryManifests);
+  const res = await Promise.all(libPromises);
+  return res;
+};
+
+export const findLibraryManifests = async (library: string) => {
+  return fs.readdir(library);
+};
+
 export async function hasManifest(library: string, appid: number) {
   return fs.pathExists(path.join(library, `appmanifest_${appid}.acf`));
 }

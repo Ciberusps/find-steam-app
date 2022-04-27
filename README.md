@@ -40,3 +40,7 @@ await findSteamAppManifest(570);
 ```
 
 For more information about manifest, see [manifest.ts](src/manifest.ts)
+
+##
+
+- при переносе игры manifest остается в старой папке и становится нечитаемым, добавляется файл `*.acf.tmp.save` и
