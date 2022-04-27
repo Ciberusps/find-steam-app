@@ -15,7 +15,11 @@
     "url": "https://github.com/ciberusps/find-steam-app"
   },
   "license": "MIT",
-  "author": "ark120202",
+  "author": {
+    "name": "Ciberusps",
+    "email": "ciberus.ps@gmail.com",
+    "url": "https://github.com/Ciberusps"
+  },
   "files": [
     "lib/**/*.{js,ts}"
   ],
