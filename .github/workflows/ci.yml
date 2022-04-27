@@ -29,7 +29,7 @@ jobs:
       - run: npm run typecheck
 
   test:
-    name: Type
+    name: Test
     runs-on: windows-latest
 
     steps:
