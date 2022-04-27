@@ -87,6 +87,8 @@ export async function findSteamAppByName(name: string) {
     })
   );
 
+  // TODO: v2 using findSteamApps
+
   const resultLib = appsWithSize.sort((a, b) => b.size - a.size)[0];
   return resultLib.appInstallFolder;
 }
@@ -126,7 +128,6 @@ export async function findSteamAppById(appId: number): Promise<string> {
     );
 
     const resultLib = appsWithSize?.sort((a, b) => b?.size - a?.size)[0];
-    console.log({ appsWithSize, resultLib });
     if (!resultLib) throw new Error("App not found");
     return resultLib.appInstallFolder;
   }
