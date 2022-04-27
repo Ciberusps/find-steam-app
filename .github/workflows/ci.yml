@@ -17,7 +17,7 @@ jobs:
       - run: npm run lint:prettier
 
   typecheck:
-    name: Test
+    name: Typecheck
     runs-on: ubuntu-latest
 
     steps:
@@ -29,8 +29,8 @@ jobs:
       - run: npm run typecheck
 
   test:
-    name: Typecheck
-    runs-on: ubuntu-latest
+    name: Type
+    runs-on: windows-latest
 
     steps:
       - uses: actions/checkout@v3
