@@ -5,13 +5,13 @@
  */
 import mock from "mock-fs";
 import path from "path";
-// import fs from "fs";
+import fs from "fs";
 
-import { findSteamLibraries, findSteamLibrariesPaths } from "../index";
+import { findSteamAppById, findSteamLibraries, findSteamLibrariesPaths } from "../index";
 import { findSteam } from "../steam";
-import { getLibraryFolder } from "../utils";
+import { joinAndNormalize } from "../utils";
 
-import { mockDrives, steamFolder } from "./utils";
+import { mockLoad, steamFolder } from "./utils";
 
 jest.mock("../steam", () => {
   const originalModule = jest.requireActual("../steam");
@@ -23,12 +23,25 @@ jest.mock("../steam", () => {
 
 describe("SteamLibraries v1", () => {
   beforeAll(async () => {
-    mockDrives();
-
     mock({
-      "c/Program Files (x86)/Steam/steamapps/libraryfolders.vdf": mock.load(
-        path.resolve(__dirname, "../../__data__/v1/libraryfolders.vdf")
-      ),
+      c: {
+        "Program Files (x86)": {
+          Steam: {
+            steamapps: {
+              common: mockLoad(
+                "../../__data__/c/Program Files (x86)/Steam/steamapps/common"
+              ),
+              "appmanifest_228980.acf": mockLoad(
+                "../../__data__/c/Program Files (x86)/Steam/steamapps/appmanifest_228980.acf"
+              ),
+              "libraryfolders.vdf": mockLoad("../../__data__/v1/libraryfolders.vdf"),
+            },
+          },
+        },
+      },
+      d: mockLoad("../../__data__/d"),
+      e: mockLoad("../../__data__/e"),
+      f: mockLoad("../../__data__/f"),
     });
   });
 
@@ -48,10 +61,10 @@ describe("SteamLibraries v1", () => {
 
     expect(steamPaths).toBeTruthy();
     expect(steamPaths).toEqual([
-      getLibraryFolder(steamFolder),
-      getLibraryFolder("d/SteamLibrary"),
-      getLibraryFolder("e/SteamLibrary"),
-      getLibraryFolder("f/SteamLibrary"),
+      joinAndNormalize(steamFolder),
+      joinAndNormalize("d/SteamLibrary"),
+      joinAndNormalize("e/SteamLibrary"),
+      joinAndNormalize("f/SteamLibrary"),
     ]);
   });
 
@@ -62,11 +75,20 @@ describe("SteamLibraries v1", () => {
     expect(steamPaths).toEqual({
       version: "v1",
       oldLibraries: [
-        getLibraryFolder("c/Program Files (x86)/Steam"),
-        getLibraryFolder("d/SteamLibrary"),
-        getLibraryFolder("e/SteamLibrary"),
-        getLibraryFolder("f/SteamLibrary"),
+        joinAndNormalize("c/Program Files (x86)/Steam"),
+        joinAndNormalize("d/SteamLibrary"),
+        joinAndNormalize("e/SteamLibrary"),
+        joinAndNormalize("f/SteamLibrary"),
       ],
     });
+  });
+
+  test("findSteamAppById", async () => {
+    // edge case search, described in README.md
+    const steamAppById = await findSteamAppById(570);
+    expect(steamAppById).toBeTruthy();
+    expect(steamAppById).toBe(
+      path.normalize("f/SteamLibrary/steamapps/common/dota 2 beta")
+    );
   });
 });

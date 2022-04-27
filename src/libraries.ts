@@ -2,7 +2,7 @@ import fs from "fs-extra";
 import uniqBy from "lodash.uniqby";
 import path from "path";
 import vdf from "vdf-extra";
-import { getLibraryFolder } from "./utils";
+import { getLibraryAppsManifestsFolder, joinAndNormalize } from "./utils";
 
 export interface SteamLibraryFolder {
   path: string;
@@ -25,7 +25,7 @@ interface LibraryFolders {
 }
 
 export async function loadSteamLibrariesPaths(steam: string): Promise<string[]> {
-  const mainSteamApps = path.join(steam, "steamapps");
+  const mainSteamApps = getLibraryAppsManifestsFolder(steam);
   const libraryFoldersPath = path.join(mainSteamApps, "libraryfolders.vdf");
   const libraryFoldersContent = await fs.readFile(libraryFoldersPath, "utf8");
   const libraryFoldersData = vdf.parse<LibraryFolders>(libraryFoldersContent);
@@ -33,10 +33,10 @@ export async function loadSteamLibrariesPaths(steam: string): Promise<string[]> 
   const libraries = Object.entries(libraryFoldersData)
     .filter(([id]) => !isNaN(Number(id)))
     .map(([, libPath]) =>
-      getLibraryFolder(typeof libPath === "string" ? libPath : libPath.path)
+      joinAndNormalize(typeof libPath === "string" ? libPath : libPath.path)
     );
 
-  return uniqBy([mainSteamApps, ...libraries], String);
+  return uniqBy([joinAndNormalize(steam), ...libraries], String);
 }
 
 export async function loadSteamLibraries(steam: string): Promise<SteamLibraries> {
@@ -53,7 +53,7 @@ export async function loadSteamLibraries(steam: string): Promise<SteamLibraries>
 
   const oldLibraries = uniqBy(
     libraries.map(([, val]) =>
-      getLibraryFolder(typeof val === "string" ? val : val.path)
+      joinAndNormalize(typeof val === "string" ? val : val.path)
     ),
     String
   );
@@ -66,7 +66,7 @@ export async function loadSteamLibraries(steam: string): Promise<SteamLibraries>
     let librariesV2 = libraries.map(([_, val]) => val) as SteamLibraryFolder[];
     librariesV2 = librariesV2.map((val) => ({
       ...val,
-      path: getLibraryFolder(val.path),
+      path: joinAndNormalize(val.path),
     }));
     librariesV2 = uniqBy(librariesV2, "path");
 

@@ -28,8 +28,12 @@ await findSteamAppByName("dota 2 beta");
 await findSteam();
 // => '/path/to/steam'
 
-await findSteamLibrariesPaths();
+const libs = await findSteamLibrariesPaths();
+// => ['/path/to/steam', '/path/to/library']
+libs.map(getLibraryAppsManifestsFolder);
 // => ['/path/to/steam/steamapps', '/path/to/library/steamapps']
+libs.map(getLibraryAppsInstallFolder);
+// => ['/path/to/steam/steamapps/common', '/path/to/library/steamapps/common']
 
 await findSteamLibraries();
 // => [{ path: '/path/to/library/steamapps', totalsize: 41234, apps: ['570'], ... }, ...]

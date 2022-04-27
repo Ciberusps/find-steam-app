@@ -1,6 +1,6 @@
 import fs from "fs-extra";
-import path from "path";
 import vdf from "vdf-extra";
+import { getLibraryAppsManifestsFolder, joinAndNormalize } from "./utils";
 
 export interface AppManifest {
   appid: number;
@@ -43,14 +43,23 @@ export const findLibraryManifests = async (libraryPath: string) => {
 };
 
 export async function hasManifest(libraryPath: string, appid: number) {
-  return fs.pathExists(path.join(libraryPath, `appmanifest_${appid}.acf`));
+  const libraryManifestsFolder = getLibraryAppsManifestsFolder(libraryPath);
+  const manifestPath = joinAndNormalize(
+    libraryManifestsFolder,
+    `appmanifest_${appid}.acf`
+  );
+  return fs.pathExists(manifestPath);
 }
 
 export async function readManifest(
   libraryPath: string,
   appid: number
 ): Promise<AppManifest | null> {
-  const manifestPath = path.join(libraryPath, `appmanifest_${appid}.acf`);
+  const libraryManifestsFolder = getLibraryAppsManifestsFolder(libraryPath);
+  const manifestPath = joinAndNormalize(
+    libraryManifestsFolder,
+    `appmanifest_${appid}.acf`
+  );
 
   try {
     const manifestContent = await fs.readFile(manifestPath, "utf8");
