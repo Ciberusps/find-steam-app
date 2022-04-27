@@ -38,17 +38,17 @@ export const findLibrariesManifests = async (libs: string[]) => {
   return res;
 };
 
-export const findLibraryManifests = async (library: string) => {
-  return fs.readdir(library);
+export const findLibraryManifests = async (libraryPath: string) => {
+  return fs.readdir(libraryPath);
 };
 
-export async function hasManifest(library: string, appid: number) {
-  return fs.pathExists(path.join(library, `appmanifest_${appid}.acf`));
+export async function hasManifest(libraryPath: string, appid: number) {
+  return fs.pathExists(path.join(libraryPath, `appmanifest_${appid}.acf`));
 }
 
-export async function readManifest(library: string, appid: number) {
-  const manifestPath = path.join(library, `appmanifest_${appid}.acf`);
-  const manifestTempPath = path.join(library, `appmanifest_${appid}.acf.tmp.save`);
+export async function readManifest(libraryPath: string, appid: number) {
+  const manifestPath = path.join(libraryPath, `appmanifest_${appid}.acf`);
+  const manifestTempPath = path.join(libraryPath, `appmanifest_${appid}.acf.tmp.save`);
 
   try {
     // if manifest parse error try open temporary manifest(.acf.tmp.save)

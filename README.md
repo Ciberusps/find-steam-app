@@ -63,3 +63,4 @@ For more information about manifest, see [manifest.ts](src/manifest.ts)
 ## TODO
 
 - if `libraryfolders.vdf` modern and dont have single "paths"
+- jsdoc/tsdoc

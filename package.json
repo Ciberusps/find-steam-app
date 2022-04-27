@@ -28,6 +28,7 @@
     "lint:prettier": "prettier --check **/*.{js,jsx,ts,tsx,json,css,scss,md}",
     "fix:prettier": "prettier --write **/*.{js,jsx,ts,tsx,json,css,scss,md}",
     "typecheck": "tsc --noEmit",
+    "test": "jest",
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
@@ -42,12 +43,15 @@
   "devDependencies": {
     "@types/execa": "^0.9.0",
     "@types/fs-extra": "^5.1.0",
+    "@types/jest": "^27.4.1",
     "@types/lodash.uniqby": "^4.7.7",
     "@typescript-eslint/eslint-plugin": "^5.21.0",
     "@typescript-eslint/parser": "^5.21.0",
     "eslint": "^8.14.0",
     "eslint-config-airbnb-base": "^15.0.0",
+    "jest": "^27.5.1",
     "prettier": "^2.6.2",
+    "ts-jest": "^27.1.4",
     "typescript": "^4.6.3"
   }
 }
