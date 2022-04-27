@@ -46,18 +46,18 @@ export async function hasManifest(libraryPath: string, appid: number) {
   return fs.pathExists(path.join(libraryPath, `appmanifest_${appid}.acf`));
 }
 
-export async function readManifest(libraryPath: string, appid: number) {
+export async function readManifest(
+  libraryPath: string,
+  appid: number
+): Promise<AppManifest | null> {
   const manifestPath = path.join(libraryPath, `appmanifest_${appid}.acf`);
-  const manifestTempPath = path.join(libraryPath, `appmanifest_${appid}.acf.tmp.save`);
 
   try {
-    // if manifest parse error try open temporary manifest(.acf.tmp.save)
     const manifestContent = await fs.readFile(manifestPath, "utf8");
     const manifestData = vdf.parse<AppManifest>(manifestContent);
     return manifestData;
   } catch (err) {
-    const manifestContent = await fs.readFile(manifestTempPath, "utf8");
-    const manifestData = vdf.parse<AppManifest>(manifestContent);
-    return manifestData;
+    console.warn(err);
   }
+  return null;
 }

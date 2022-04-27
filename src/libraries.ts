@@ -51,13 +51,13 @@ export async function loadSteamLibraries(steam: string): Promise<SteamLibraries>
   const isV1 = libraries.some(([_, val]) => typeof val === "string");
   // console.log({ libraries: JSON.stringify(libraries, null, 2), isV1 });
 
+  const oldLibraries = uniqBy(
+    libraries.map(([, val]) =>
+      getLibraryFolder(typeof val === "string" ? val : val.path)
+    ),
+    String
+  );
   if (isV1) {
-    const oldLibraries = uniqBy(
-      libraries.map(([, val]) =>
-        getLibraryFolder(typeof val === "string" ? val : val.path)
-      ),
-      String
-    );
     return {
       version: "v1",
       oldLibraries,
@@ -73,6 +73,7 @@ export async function loadSteamLibraries(steam: string): Promise<SteamLibraries>
     return {
       version: "v2",
       libraries: librariesV2 as SteamLibraryFolder[],
+      oldLibraries,
     };
   }
 }

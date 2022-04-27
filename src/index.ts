@@ -104,6 +104,7 @@ export async function findSteamAppById(appId: number): Promise<string> {
     const appLibrary = findAppLibraryInV2Libraries(appId, steamLibs.libraries);
     if (!appLibrary) throw new Error("App not found");
     const manifest = await readManifest(appLibrary.path, appId);
+    if (!manifest) throw new Error("App manifest not found");
     return getAppInstallFolder(appLibrary.path, manifest.installdir);
   }
 
@@ -116,6 +117,7 @@ export async function findSteamAppById(appId: number): Promise<string> {
     const appsWithSize = await Promise.all(
       appLibs.map(async (lib) => {
         const manifest = await readManifest(lib, appId);
+        if (!manifest) throw new Error("App manifest not found");
         const appInstallFolder = getAppInstallFolder(lib, manifest.installdir);
         const isExist = await fs.pathExists(appInstallFolder);
         const size = isExist ? await getFolderSizeAsync(appInstallFolder) : -1;

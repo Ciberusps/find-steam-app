@@ -1,8 +1,8 @@
 import mock from "mock-fs";
 // import path from "path";
-import fs from "fs";
+// import fs from "fs";
 
-import { findSteamLibraries, findSteamLibrariesPaths } from "../index";
+import { findSteamAppById, findSteamLibraries, findSteamLibrariesPaths } from "../index";
 import { findSteam } from "../steam";
 import { getLibraryFolder } from "../utils";
 
@@ -47,13 +47,6 @@ describe("SteamLibraries v2", () => {
   test("findSteamLibraries", async () => {
     const steamPaths = await findSteamLibraries();
 
-    console.log({
-      test: fs.readFileSync(
-        "c/Program Files (x86)/Steam/steamapps/libraryfolders.vdf",
-        "utf8"
-      ),
-    });
-
     expect(steamPaths).toBeTruthy();
     expect(steamPaths).toMatchObject({
       version: "v2",
@@ -72,5 +65,10 @@ describe("SteamLibraries v2", () => {
         },
       ],
     });
+  });
+
+  test("findSteamAppById", async () => {
+    const steamAppById = await findSteamAppById(570);
+    console.log({ steamAppById });
   });
 });

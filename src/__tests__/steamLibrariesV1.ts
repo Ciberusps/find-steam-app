@@ -1,3 +1,8 @@
+/**
+ * __data__ contain the files that will be used to mock the filesystem.
+ * __data__  mimic the filesystem of the computer.
+ * so if u know any edge cases, u can try to add those files and see if it works.
+ */
 import mock from "mock-fs";
 import path from "path";
 // import fs from "fs";
@@ -38,6 +43,18 @@ describe("SteamLibraries v1", () => {
     expect(steamPath).toBe(steamFolder);
   });
 
+  test("findSteamLibrariesPaths", async () => {
+    const steamPaths = await findSteamLibrariesPaths();
+
+    expect(steamPaths).toBeTruthy();
+    expect(steamPaths).toEqual([
+      getLibraryFolder(steamFolder),
+      getLibraryFolder("d/SteamLibrary"),
+      getLibraryFolder("e/SteamLibrary"),
+      getLibraryFolder("f/SteamLibrary"),
+    ]);
+  });
+
   test("findSteamLibraries", async () => {
     const steamPaths = await findSteamLibraries();
 
@@ -51,17 +68,5 @@ describe("SteamLibraries v1", () => {
         getLibraryFolder("f/SteamLibrary"),
       ],
     });
-  });
-
-  test("findSteamLibrariesPaths", async () => {
-    const steamPaths = await findSteamLibrariesPaths();
-
-    expect(steamPaths).toBeTruthy();
-    expect(steamPaths).toEqual([
-      getLibraryFolder(steamFolder),
-      getLibraryFolder("d/SteamLibrary"),
-      getLibraryFolder("e/SteamLibrary"),
-      getLibraryFolder("f/SteamLibrary"),
-    ]);
   });
 });
