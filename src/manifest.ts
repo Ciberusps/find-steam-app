@@ -3,7 +3,7 @@ import vdf from "vdf-extra";
 
 import { getAppsManifestsFolder, joinAndNormalize } from "./utils";
 
-export interface AppManifest {
+export interface IAppManifest {
   appid: number;
   Universe: number;
   name: string;
@@ -45,7 +45,7 @@ export async function hasManifest(libraryPath: string, appid: number): Promise<b
 export async function readManifest(
   libraryPath: string,
   appid: number
-): Promise<AppManifest | null> {
+): Promise<IAppManifest | null> {
   const libraryManifestsFolder = getAppsManifestsFolder(libraryPath);
   const manifestPath = joinAndNormalize(
     libraryManifestsFolder,
@@ -54,7 +54,7 @@ export async function readManifest(
 
   try {
     const manifestContent = await fs.readFile(manifestPath, "utf8");
-    const manifestData = vdf.parse<AppManifest>(manifestContent);
+    const manifestData = vdf.parse<IAppManifest>(manifestContent);
     return manifestData;
   } catch (err) {
     console.info(err);
@@ -62,7 +62,7 @@ export async function readManifest(
   return null;
 }
 
-export async function findManifests(libraryPath: string): Promise<AppManifest[]> {
+export async function findManifests(libraryPath: string): Promise<IAppManifest[]> {
   const libraryManifestsFolder = getAppsManifestsFolder(libraryPath);
   const manifestPaths = await fs.readdir(libraryManifestsFolder);
   const manifests = await Promise.all(
@@ -74,5 +74,5 @@ export async function findManifests(libraryPath: string): Promise<AppManifest[]>
         return manifest;
       })
   );
-  return manifests.filter(Boolean) as AppManifest[];
+  return manifests.filter(Boolean) as IAppManifest[];
 }

@@ -2,6 +2,13 @@ import execa from "execa";
 import fs from "fs-extra";
 import path from "path";
 
+export class SteamNotFoundError extends Error {
+  public constructor() {
+    super("Steam installation directory not found");
+    this.name = "SteamNotFoundError";
+  }
+}
+
 const pathIfExists = async (name: string) =>
   (await fs.pathExists(name)) ? name : undefined;
 

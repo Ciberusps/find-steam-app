@@ -1,9 +1,9 @@
 import mock from "mock-fs";
 
 import {
+  findSteam,
   findSteamAppById,
   findSteamAppByName,
-  findSteam,
   findSteamLibraries,
   findSteamLibrariesPaths,
 } from "../index";

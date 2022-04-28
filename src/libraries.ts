@@ -2,10 +2,11 @@ import fs from "fs-extra";
 import uniqBy from "lodash.uniqby";
 import path from "path";
 import vdf from "vdf-extra";
+import { findSteamPath, SteamNotFoundError } from "./steam";
 
 import { getAppsManifestsFolder, joinAndNormalize } from "./utils";
 
-export type SteamLibraryRaw = {
+export interface ISteamLibraryRaw {
   path: string;
   label?: string;
   contentid?: number;
@@ -13,22 +14,25 @@ export type SteamLibraryRaw = {
   update_clean_bytes_tally?: number;
   time_last_update_corruption?: number;
   apps?: { [id: string]: number };
-};
+}
 
-export interface SteamLibrariesRaw {
+export interface ISteamLibrariesRaw {
   version: "v1" | "v2";
-  libraries: SteamLibraryRaw[];
+  libraries: ISteamLibraryRaw[];
 }
 
-interface LibraryFolders {
-  [id: string]: SteamLibraryRaw | string;
+interface ILibraryFolders {
+  [id: string]: ISteamLibraryRaw | string;
 }
 
-export async function loadSteamLibrariesPaths(steam: string): Promise<string[]> {
+export async function loadSteamLibrariesPaths(): Promise<string[]> {
+  const steam = await findSteamPath();
+  if (!steam) throw new SteamNotFoundError();
+
   const mainSteamApps = getAppsManifestsFolder(steam);
   const libraryFoldersPath = path.join(mainSteamApps, "libraryfolders.vdf");
   const libraryFoldersContent = await fs.readFile(libraryFoldersPath, "utf8");
-  const libraryFoldersData = vdf.parse<LibraryFolders>(libraryFoldersContent);
+  const libraryFoldersData = vdf.parse<ILibraryFolders>(libraryFoldersContent);
 
   const libraries = Object.entries(libraryFoldersData)
     .filter(([id]) => !isNaN(Number(id)))
@@ -39,11 +43,14 @@ export async function loadSteamLibrariesPaths(steam: string): Promise<string[]> 
   return uniqBy([joinAndNormalize(steam), ...libraries], String);
 }
 
-export async function loadSteamLibraries(steam: string): Promise<SteamLibrariesRaw> {
+export async function loadSteamLibraries(): Promise<ISteamLibrariesRaw> {
+  const steam = await findSteamPath();
+  if (!steam) throw new SteamNotFoundError();
+
   const mainSteamApps = path.join(steam, "steamapps");
   const libraryFoldersPath = path.join(mainSteamApps, "libraryfolders.vdf");
   const libraryFoldersContent = await fs.readFile(libraryFoldersPath, "utf8");
-  const libraryFoldersData = vdf.parse<LibraryFolders>(libraryFoldersContent);
+  const libraryFoldersData = vdf.parse<ILibraryFolders>(libraryFoldersContent);
 
   const steamLibs = Object.entries(libraryFoldersData).filter(
     ([id]) => !isNaN(Number(id))
@@ -58,10 +65,10 @@ export async function loadSteamLibraries(steam: string): Promise<SteamLibrariesR
 
     return {
       version: "v1",
-      libraries: libs as SteamLibraryRaw[],
+      libraries: libs as ISteamLibraryRaw[],
     };
   } else {
-    let libs = steamLibs.map(([_, val]) => val) as SteamLibraryRaw[];
+    let libs = steamLibs.map(([_, val]) => val) as ISteamLibraryRaw[];
     libs = libs.map((val) => ({
       ...val,
       path: joinAndNormalize(val.path),
@@ -70,7 +77,7 @@ export async function loadSteamLibraries(steam: string): Promise<SteamLibrariesR
 
     return {
       version: "v2",
-      libraries: libs as SteamLibraryRaw[],
+      libraries: libs as ISteamLibraryRaw[],
     };
   }
 }

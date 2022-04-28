@@ -1,5 +1,6 @@
 import path from "path";
-import { SteamLibraryRaw } from "./libraries";
+
+import { ISteamLibraryRaw } from "./libraries";
 
 export const joinAndNormalize = (...paths: string[]) =>
   path.normalize(path.join(...paths));
@@ -18,8 +19,8 @@ export const getAppInstallFolder = (library: string, name: string) => {
 
 export const findAppLibraryInV2Libraries = (
   appId: number,
-  librariesV2: SteamLibraryRaw[]
-): SteamLibraryRaw | undefined => {
+  librariesV2: ISteamLibraryRaw[]
+): ISteamLibraryRaw | undefined => {
   return librariesV2?.find(
     (lib) => lib.apps && Object.keys(lib.apps).includes(appId.toString())
   );
