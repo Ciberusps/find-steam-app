@@ -2,6 +2,11 @@
 
 > Find location of an installed Steam app
 
+Steam Libraries has 2 versions
+
+- v1 - only path to library, we can identify where app installed only by manifest
+- v2 - object with info about library and apps array that gives us exactly where app installed
+
 ## Support
 
 - Windows ✅

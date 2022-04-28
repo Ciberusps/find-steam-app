@@ -1,5 +1,5 @@
 import mock from "mock-fs";
-import path from "path";
+// import path from "path";
 // import fs from "fs";
 
 import {
@@ -64,6 +64,9 @@ describe("SteamLibraries v2", () => {
       libraries: [
         {
           path: joinAndNormalize("c/Program Files (x86)/Steam"),
+          apps: {
+            "228980": 204600378,
+          },
         },
         {
           path: joinAndNormalize("d/SteamLibrary"),
@@ -73,6 +76,9 @@ describe("SteamLibraries v2", () => {
         },
         {
           path: joinAndNormalize("f/SteamLibrary"),
+          apps: {
+            "570": 38478425675,
+          },
         },
       ],
     });
@@ -82,22 +88,36 @@ describe("SteamLibraries v2", () => {
     // edge case search, described in README.md
     const result = await findSteamAppById(570);
     expect(result).toBeTruthy();
-    expect(result).toBe(path.normalize("f/SteamLibrary/steamapps/common/dota 2 beta"));
+    expect(result).toBe(joinAndNormalize("f/SteamLibrary/steamapps/common/dota 2 beta"));
   });
 
   test("findSteamAppName", async () => {
     // edge case search, described in README.md
     const result = await findSteamAppByName("dota 2 beta");
     expect(result).toBeTruthy();
-    expect(result).toBe(path.normalize("f/SteamLibrary/steamapps/common/dota 2 beta"));
+    expect(result).toBe(joinAndNormalize("f/SteamLibrary/steamapps/common/dota 2 beta"));
   });
 
   test("findSteam", async () => {
-    const steamAppById = await findSteam();
-    expect(steamAppById).toBeTruthy();
-    // TODO:
-    // expect(steamAppById).toBe(
-    //   path.normalize("f/SteamLibrary/steamapps/common/dota 2 beta")
-    // );
+    const result = await findSteam();
+    expect(result).toBeTruthy();
+    expect(result.version).toBe("v2");
+
+    expect(result.libraries).toHaveLength(4);
+
+    expect(result.libraries?.[0].apps).toHaveLength(1);
+    expect(result.libraries?.[0].path).toBe(joinAndNormalize(steamFolder));
+    expect(result.libraries?.[0].apps?.[0]?.appId).toBe(228980);
+    expect(result.libraries?.[0].apps?.[0]?.manifest.Universe).toBeDefined();
+    expect(result.libraries?.[0].apps?.[0]?.manifest.StateFlags).toBeDefined();
+    expect(result.libraries?.[0].totalsize).toBeDefined();
+    expect(result.libraries?.[0].update_clean_bytes_tally).toBeDefined();
+
+    expect(result.libraries?.[1].apps).toHaveLength(2);
+
+    expect(result.libraries?.[2].apps).toHaveLength(9);
+
+    expect(result.libraries?.[3].apps).toHaveLength(1);
+    expect(result.libraries?.[3].apps?.[0]?.appId).toBe(570);
   });
 });

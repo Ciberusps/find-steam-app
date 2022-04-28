@@ -1,6 +1,5 @@
 import fs from "fs-extra";
 import pFilter from "p-filter";
-// import globby from "globby";
 import util from "util";
 // @ts-ignore
 import getFolderSize from "get-folder-size";
@@ -9,10 +8,10 @@ const getFolderSizeAsync = util.promisify(getFolderSize);
 import {
   loadSteamLibraries,
   loadSteamLibrariesPaths,
-  SteamLibraries,
-  SteamLibraryFolder,
+  SteamLibrariesRaw,
+  SteamLibraryRaw,
 } from "./libraries";
-import { AppManifest, hasManifest, readManifest } from "./manifest";
+import { AppManifest, findManifests, hasManifest, readManifest } from "./manifest";
 import { findSteamPath } from "./steam";
 import { findAppLibraryInV2Libraries, getAppInstallFolder } from "./utils";
 
@@ -40,7 +39,7 @@ export async function findSteamLibrariesPaths() {
  *
  * @returns Array of paths to library folders.
  */
-export async function findSteamLibraries(): Promise<SteamLibraries> {
+export async function findSteamLibraries(): Promise<SteamLibrariesRaw> {
   const steam = await findSteamPath();
   if (steam == null) throw new SteamNotFoundError();
 
@@ -72,7 +71,7 @@ export async function findSteamAppByName(name: string) {
   const appsPaths = libsPaths.map((lib) => getAppInstallFolder(lib, name));
   if (!appsPaths.length) throw new Error("App not found");
 
-  const appsWithSize = await Promise.all(
+  let appsWithSize = await Promise.all(
     appsPaths.map(async (appPath) => {
       const appInstallFolder = appPath;
       const isExists = await fs.pathExists(appInstallFolder);
@@ -80,6 +79,7 @@ export async function findSteamAppByName(name: string) {
       return { appInstallFolder: appPath, size };
     })
   );
+  appsWithSize = appsWithSize.filter(Boolean);
 
   // TODO: v2 using findSteamApps
 
@@ -104,22 +104,23 @@ export async function findSteamAppById(appId: number): Promise<string> {
     return getAppInstallFolder(appLibrary.path, manifest.installdir);
   }
 
-  if (steamLibs.version === "v1" && steamLibs.oldLibraries) {
-    const appLibs = await pFilter(steamLibs.oldLibraries, async (lib) =>
-      hasManifest(lib, appId)
+  if (steamLibs.version === "v1") {
+    const appLibs = await pFilter(steamLibs.libraries, async (lib) =>
+      hasManifest(lib.path, appId)
     );
     if (!appLibs.length) throw new Error("App not found");
 
-    const appsWithSize = await Promise.all(
+    let appsWithSize = await Promise.all(
       appLibs.map(async (lib) => {
-        const manifest = await readManifest(lib, appId);
+        const manifest = await readManifest(lib.path, appId);
         if (!manifest) return undefined;
-        const appInstallFolder = getAppInstallFolder(lib, manifest.installdir);
+        const appInstallFolder = getAppInstallFolder(lib.path, manifest.installdir);
         const isExist = await fs.pathExists(appInstallFolder);
         const size = isExist ? await getFolderSizeAsync(appInstallFolder) : -1;
         return { lib, appInstallFolder, size };
       })
     );
+    appsWithSize = appsWithSize.filter(Boolean);
 
     const resultLib = appsWithSize?.sort((a, b) => b?.size - a?.size)[0];
     if (!resultLib) throw new Error("App not found");
@@ -132,31 +133,22 @@ export async function findSteamAppById(appId: number): Promise<string> {
 interface SteamApp {
   appId: number;
   path: string;
-  // library?: SteamLibraryFolder | string;
   manifest: AppManifest;
-  // exePath?: string;
 }
 
 type SteamLibrary = {
-  apps: SteamApp[];
-  // SteamLibraryFolder props
-  path: string;
-  label: string;
-  contentid: number;
-  totalsize: number;
-  update_clean_bytes_tally: number;
-  time_last_update_corruption: number;
-};
-
-type SteamLibraryOld = {
   path: string;
   apps: SteamApp[];
+  label?: string;
+  contentid?: number;
+  totalsize?: number;
+  update_clean_bytes_tally?: number;
+  time_last_update_corruption?: number;
 };
 
 type SteamInfo = {
   version: "v1" | "v2";
-  libraries?: SteamLibrary[];
-  oldLibraries?: SteamLibraryOld[];
+  libraries: SteamLibrary[];
 };
 
 /**
@@ -167,8 +159,10 @@ type SteamInfo = {
 export async function findSteam(): Promise<SteamInfo> {
   const steamLibs = await findSteamLibraries();
   if (steamLibs.version === "v2" && steamLibs.libraries) {
-    const appsPromises = steamLibs.libraries.map((lib) =>
-      Object.keys(lib.apps).map((appId) => readManifest(lib.path, Number(appId)))
+    const appsPromises = steamLibs.libraries.map(
+      (lib) =>
+        lib.apps &&
+        Object.keys(lib.apps).map((appId) => readManifest(lib.path, Number(appId)))
     );
     const apps = await Promise.all(appsPromises.flat());
     const appsManifests = apps.filter(Boolean) as AppManifest[];
@@ -176,22 +170,42 @@ export async function findSteam(): Promise<SteamInfo> {
     const steamLibsWithApps: SteamLibrary[] = [];
     steamLibs.libraries.forEach((lib) => {
       const steamApps: SteamApp[] = [];
-      Object.keys(lib.apps).forEach((appId) => {
-        const manifest = appsManifests.find((app) => app.appid === Number(appId));
-        if (manifest) {
-          steamApps.push({
-            appId: Number(appId),
-            path: getAppInstallFolder(lib.path, manifest.installdir),
-            manifest,
-            // library: lib,
-          });
-        }
-      });
+      lib.apps &&
+        Object.keys(lib.apps).forEach((appId) => {
+          const manifest = appsManifests.find((app) => app.appid === Number(appId));
+          if (manifest) {
+            steamApps.push({
+              appId: Number(appId),
+              path: getAppInstallFolder(lib.path, manifest.installdir),
+              manifest,
+              // library: lib,
+            });
+          }
+        });
       steamLibsWithApps.push({ ...lib, apps: steamApps });
     });
 
-    console.log(steamLibsWithApps);
-    return { version: steamLibs.version, ...steamLibsWithApps };
+    // console.log(steamLibsWithApps);
+    return { version: steamLibs.version, libraries: steamLibsWithApps };
+  }
+
+  if (steamLibs.version === "v1" && steamLibs.libraries) {
+    const steamLibsWithApps: SteamLibrary[] = [];
+    for (const lib of steamLibs.libraries) {
+      const apps = await findManifests(lib.path);
+      steamLibsWithApps.push({
+        path: lib.path,
+        apps: apps.map((app) => ({
+          appId: app.appid,
+          manifest: app,
+          path: getAppInstallFolder(lib.path, app.installdir),
+        })),
+      });
+    }
+    return {
+      version: steamLibs.version,
+      libraries: steamLibsWithApps,
+    };
   }
 
   throw new Error("Apps not found");
@@ -199,7 +213,8 @@ export async function findSteam(): Promise<SteamInfo> {
 
 export {
   AppManifest,
-  SteamLibraryFolder,
+  SteamInfo,
+  SteamLibraryRaw,
   SteamLibrary,
   SteamNotFoundError,
   SteamApp,

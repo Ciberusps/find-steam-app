@@ -1,24 +1,26 @@
 import path from "path";
-import { SteamLibraryFolder } from "./libraries";
+import { SteamLibraryRaw } from "./libraries";
 
 export const joinAndNormalize = (...paths: string[]) =>
   path.normalize(path.join(...paths));
 
-export const getLibraryAppsInstallFolder = (library: string) => {
+export const getAppsInstallFolder = (library: string) => {
   return joinAndNormalize(library, "steamapps", "common");
 };
 
-export const getLibraryAppsManifestsFolder = (library: string) => {
+export const getAppsManifestsFolder = (library: string) => {
   return joinAndNormalize(library, "steamapps");
 };
 
 export const getAppInstallFolder = (library: string, name: string) => {
-  return joinAndNormalize(getLibraryAppsInstallFolder(library), name);
+  return joinAndNormalize(getAppsInstallFolder(library), name);
 };
 
 export const findAppLibraryInV2Libraries = (
   appId: number,
-  librariesV2: SteamLibraryFolder[]
-): SteamLibraryFolder | undefined => {
-  return librariesV2?.find((lib) => Object.keys(lib.apps).includes(appId.toString()));
+  librariesV2: SteamLibraryRaw[]
+): SteamLibraryRaw | undefined => {
+  return librariesV2?.find(
+    (lib) => lib.apps && Object.keys(lib.apps).includes(appId.toString())
+  );
 };
