@@ -10,25 +10,25 @@ import {
 
 const test = async () => {
   const res1 = await findSteamAppById(570);
-  console.log({ res1 });
+  console.dir({ res1 }, { depth: null });
 
   const res2 = await findSteamAppByName("dota 2 beta");
-  console.log({ res2 });
+  console.dir({ res2 }, { depth: null });
 
   const res3 = await findSteamPath();
-  console.log({ res3 });
+  console.dir({ res3 }, { depth: null });
 
   const res4 = await findSteamLibrariesPaths();
-  console.log({ res4 });
+  console.dir({ res4 }, { depth: null });
 
   const res5 = await findSteamLibraries();
-  console.log({ res5: JSON.stringify(res5, null, 4) });
+  console.dir({ res5 }, { depth: null });
 
   const res6 = await findSteam();
-  console.log({ res6 });
+  console.dir({ res6 }, { depth: null });
 
   const res7 = await findSteamAppManifest(570);
-  console.log({ res7 });
+  console.dir({ res7 }, { depth: null });
 };
 
 test();

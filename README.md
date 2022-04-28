@@ -11,7 +11,7 @@ Steam "Libraries" has 2 versions, most users use v2, but this package support v1
 ## Support
 
 - windows ✅
-- osx - ⚠️not tested
+- osx - ✅
 - linux - ⚠️not tested
 
 ## Install
