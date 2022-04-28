@@ -1,6 +1,4 @@
 import mock from "mock-fs";
-// import path from "path";
-// import fs from "fs";
 
 import {
   findSteamAppById,
@@ -91,7 +89,7 @@ describe("SteamLibraries v2", () => {
     expect(result).toBe(joinAndNormalize("f/SteamLibrary/steamapps/common/dota 2 beta"));
   });
 
-  test("findSteamAppName", async () => {
+  test("findSteamAppByName", async () => {
     // edge case search, described in README.md
     const result = await findSteamAppByName("dota 2 beta");
     expect(result).toBeTruthy();

@@ -81,8 +81,6 @@ export async function findSteamAppByName(name: string) {
   );
   appsWithSize = appsWithSize.filter(Boolean);
 
-  // TODO: v2 using findSteamApps
-
   const resultLib = appsWithSize.sort((a, b) => b.size - a.size)[0];
   return resultLib.appInstallFolder;
 }
@@ -178,14 +176,12 @@ export async function findSteam(): Promise<SteamInfo> {
               appId: Number(appId),
               path: getAppInstallFolder(lib.path, manifest.installdir),
               manifest,
-              // library: lib,
             });
           }
         });
       steamLibsWithApps.push({ ...lib, apps: steamApps });
     });
 
-    // console.log(steamLibsWithApps);
     return { version: steamLibs.version, libraries: steamLibsWithApps };
   }
 

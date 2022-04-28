@@ -66,24 +66,28 @@ For more information about manifest, see [manifest.ts](src/manifest.ts)
 
 ## Edge cases
 
-- after uninstall app folder in "common" still exist
-- after moving app folder in another library `manifest` still exists in old library but became encrypted and `*.acf.tmp.save` manifest created near
-- dota 2 was installed on disk D, moved on disk F, and somehow in library on disk E in `/common` folder `dota 2 beta` folder exist
+1. after uninstall app folder in "common" still exist
+2. after moving app folder in another library `manifest` still exists in old library but became encrypted and `*.acf.tmp.save` manifest created near
+3. dota 2 was installed on disk D, moved on disk F, and somehow in library on disk E in `/common` folder `dota 2 beta` folder exist
 
-- disk D
-  - has appmanifest_570.acf
-  - has appmanifest_570.acf.tmp.save
-  - no folder `dota 2 beta` in `/common`
-- disk E
-  - no manifest
-  - has folder `dota 2 beta` in `/common`
-- disk F - right disk
-  - has appmanifest_570.acf
-  - dont have appmanifest \*.acf.tmp.save
-  - has folder `dota 2 beta` in `/common`
+   - disk D
+     - has appmanifest_570.acf
+     - has appmanifest_570.acf.tmp.save
+     - no folder `dota 2 beta` in `/common`
+   - disk E
+     - no manifest
+     - has folder `dota 2 beta` in `/common`
+   - disk F - right disk
+
+     - has appmanifest_570.acf
+     - dont have appmanifest \*.acf.tmp.save
+     - has folder `dota 2 beta` in `/common`
+
+- `__data__` contain the files that will be used to mock the filesystem.
+- `__data__` mimic the filesystem of the computer.
+- so if u know any edge cases, u can try to add those files and see if it works
 
 ## TODO
 
-- `findSteamApps` - filter some appIds like `228980` its "Steamworks Common Redistributables" https://steamdb.info/app/228980/ not app in
-- if `libraryfolders.vdf` modern and dont have single "paths"
+- filter non-game apps, `findSteamApps` - filter some appIds like `228980` its "Steamworks Common Redistributables" https://steamdb.info/app/228980/ not app in
 - jsdoc/tsdoc

@@ -1,8 +1,3 @@
-/**
- * __data__ contain the files that will be used to mock the filesystem.
- * __data__  mimic the filesystem of the computer.
- * so if u know any edge cases, u can try to add those files and see if it works.
- */
 import mock from "mock-fs";
 import path from "path";
 
@@ -103,7 +98,7 @@ describe("SteamLibraries v1", () => {
     expect(result).toBe(path.normalize("f/SteamLibrary/steamapps/common/dota 2 beta"));
   });
 
-  test("findSteamAppName", async () => {
+  test("findSteamAppByName", async () => {
     // edge case search, described in README.md
     const result = await findSteamAppByName("dota 2 beta");
     expect(result).toBeTruthy();
