@@ -2,6 +2,10 @@
 
 > Find location of an installed Steam app
 
+## Install
+
+> npm i @ciberus/find-steam-app -S
+
 Steam has "Libraries" - locations on disks there games installed
 Steam "Libraries" has 2 versions, most users use v2, but this package support v1 also
 
@@ -14,14 +18,13 @@ Steam "Libraries" has 2 versions, most users use v2, but this package support v1
 - osx - ✅
 - linux - ⚠️not tested
 
-## Install
-
-> npm i @ciberus/find-steam-app -S
-
 ## Usage
 
 ```ts
 import {
+  ISteamLibraries,
+  IAppManifest,
+  ISteamLibrariesRaw,
   findSteamPath,
   findSteamAppById,
   findSteamAppByName,
@@ -40,9 +43,9 @@ await findSteamAppById(570);
 await findSteamAppByName("dota 2 beta");
 // => '/path/to/steam/steamapps/common/dota 2 beta'
 
-await findSteamAppManifest(570);
+const res: IAppManifest = await findSteamAppManifest(570);
 // => { appid: 570, Universe: 1, name: 'Dota 2', ... }
-// returns `AppManifest` more below
+// returns `AppManifest` more info below
 
 const libs = await findSteamLibrariesPaths();
 // => ['/path/to/steam', '/path/to/library']
@@ -53,12 +56,26 @@ libs.map(getLibraryAppsManifestsFolder);
 libs.map(getLibraryAppsInstallFolder);
 // => ['/path/to/steam/steamapps/common', '/path/to/library/steamapps/common']
 
-await findSteamLibraries();
+const steamLibsRaw: ISteamLibrariesRaw = await findSteamLibraries();
 // => [{ path: '/path/to/library/steamapps', totalsize: 41234, apps: ['570'], ... }, ...]
 
-await findSteam({ enableBullshetFilter: true });
-
-// => ['/path/to/steam/steamapps', '/path/to/library/steamapps']
+const steamLibs: ISteamLibraries = await findSteam();
+// => {
+//      version: "v2",
+//      libraries: [{
+//           path: "/path/to/lib",
+//           apps: [{
+//             appId: 570,
+//             path: "/path/to/app",
+//             manifest: {
+//                appid: 570,
+//                installdir: "dota 2 beta"
+//                buildid: 340918349
+//                ...
+//             }
+//          }]
+//      }]
+//    }
 ```
 
 AppManifest - [manifest.ts](src/manifest.ts)
@@ -90,5 +107,4 @@ AppManifest - [manifest.ts](src/manifest.ts)
 
 ## TODO
 
-- filter non-game apps, `findSteamApps` - filter some appIds like `228980` its "Steamworks Common Redistributables" https://steamdb.info/app/228980/ not app in
 - jsdoc/tsdoc

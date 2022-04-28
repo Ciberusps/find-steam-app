@@ -135,7 +135,7 @@ type ISteamLibrary = {
   time_last_update_corruption?: number;
 };
 
-type ISteamInfo = {
+type ISteamLibraries = {
   version: "v1" | "v2";
   libraries: ISteamLibrary[];
 };
@@ -145,7 +145,7 @@ type ISteamInfo = {
  *
  * @returns Path to installed app.
  */
-export async function findSteam(): Promise<ISteamInfo> {
+export async function findSteam(): Promise<ISteamLibraries> {
   const steamLibs = await findSteamLibraries();
   if (steamLibs.version === "v2" && steamLibs.libraries) {
     const appsPromises = steamLibs.libraries.map(
@@ -199,12 +199,12 @@ export async function findSteam(): Promise<ISteamInfo> {
 }
 
 export {
-  IAppManifest as AppManifest,
-  ISteamInfo as SteamInfo,
-  ISteamLibraryRaw as SteamLibraryRaw,
-  ISteamLibrary as SteamLibrary,
+  IAppManifest,
+  ISteamLibraries as ISteamInfo,
+  ISteamLibraryRaw,
+  ISteamLibrary,
   SteamNotFoundError,
-  ISteamApp as SteamApp,
+  ISteamApp,
   findSteamPath,
   getAppsInstallFolder,
   getAppsManifestsFolder,
