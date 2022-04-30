@@ -5,16 +5,27 @@ import { ISteamLibraryRaw } from "./libraries";
 export const joinAndNormalize = (...paths: string[]) =>
   path.normalize(path.join(...paths));
 
-export const getAppsInstallFolder = (library: string) => {
-  return joinAndNormalize(library, "steamapps", "common");
+export const getLibraryInstallsFolder = (libraryPath: string) => {
+  return joinAndNormalize(libraryPath, "steamapps", "common");
 };
 
-export const getAppsManifestsFolder = (library: string) => {
-  return joinAndNormalize(library, "steamapps");
+export const getLibraryManifestsFolder = (libraryPath: string) => {
+  return joinAndNormalize(libraryPath, "steamapps");
 };
 
-export const getAppInstallFolder = (library: string, name: string) => {
-  return joinAndNormalize(getAppsInstallFolder(library), name);
+export const getAppInstallFolder = (libraryPath: string, name: string) => {
+  return joinAndNormalize(getLibraryInstallsFolder(libraryPath), name);
+};
+
+export const getLibrariesVdfFilePath = (steamPath: string) => {
+  return joinAndNormalize(getLibraryManifestsFolder(steamPath), "libraryfolders.vdf");
+};
+
+export const getManifestPath = (libraryPath: string, appId: number) => {
+  return joinAndNormalize(
+    getLibraryManifestsFolder(libraryPath),
+    `appmanifest_${appId}.acf`
+  );
 };
 
 export const findAppLibraryInV2Libraries = (

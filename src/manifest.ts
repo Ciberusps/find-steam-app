@@ -1,7 +1,7 @@
 import fs from "fs-extra";
 import vdf from "vdf-extra";
 
-import { getAppsManifestsFolder, joinAndNormalize } from "./utils";
+import { getLibraryManifestsFolder, getManifestPath } from "./utils";
 
 export interface IAppManifest {
   appid: number;
@@ -34,11 +34,7 @@ export interface IAppManifest {
 }
 
 export async function hasManifest(libraryPath: string, appid: number): Promise<boolean> {
-  const libraryManifestsFolder = getAppsManifestsFolder(libraryPath);
-  const manifestPath = joinAndNormalize(
-    libraryManifestsFolder,
-    `appmanifest_${appid}.acf`
-  );
+  const manifestPath = getManifestPath(libraryPath, appid);
   return fs.pathExists(manifestPath);
 }
 
@@ -46,13 +42,8 @@ export async function readManifest(
   libraryPath: string,
   appid: number
 ): Promise<IAppManifest | null> {
-  const libraryManifestsFolder = getAppsManifestsFolder(libraryPath);
-  const manifestPath = joinAndNormalize(
-    libraryManifestsFolder,
-    `appmanifest_${appid}.acf`
-  );
-
   try {
+    const manifestPath = getManifestPath(libraryPath, appid);
     const manifestContent = await fs.readFile(manifestPath, "utf8");
     const manifestData = vdf.parse<IAppManifest>(manifestContent);
     return manifestData;
@@ -63,7 +54,7 @@ export async function readManifest(
 }
 
 export async function findManifests(libraryPath: string): Promise<IAppManifest[]> {
-  const libraryManifestsFolder = getAppsManifestsFolder(libraryPath);
+  const libraryManifestsFolder = getLibraryManifestsFolder(libraryPath);
   const manifestPaths = await fs.readdir(libraryManifestsFolder);
   const manifests = await Promise.all(
     manifestPaths

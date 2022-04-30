@@ -1,10 +1,9 @@
 import fs from "fs-extra";
 import uniqBy from "lodash.uniqby";
-import path from "path";
 import vdf from "vdf-extra";
 import { findSteamPath, SteamNotFoundError } from "./steam";
 
-import { getAppsManifestsFolder, joinAndNormalize } from "./utils";
+import { getLibrariesVdfFilePath, joinAndNormalize } from "./utils";
 
 export interface ISteamLibraryRaw {
   path: string;
@@ -26,11 +25,10 @@ interface ILibraryFolders {
 }
 
 export async function loadSteamLibrariesPaths(): Promise<string[]> {
-  const steam = await findSteamPath();
-  if (!steam) throw new SteamNotFoundError();
+  const steamPath = await findSteamPath();
+  if (!steamPath) throw new SteamNotFoundError();
 
-  const mainSteamApps = getAppsManifestsFolder(steam);
-  const libraryFoldersPath = path.join(mainSteamApps, "libraryfolders.vdf");
+  const libraryFoldersPath = getLibrariesVdfFilePath(steamPath);
   const libraryFoldersContent = await fs.readFile(libraryFoldersPath, "utf8");
   const libraryFoldersData = vdf.parse<ILibraryFolders>(libraryFoldersContent);
 
@@ -40,15 +38,14 @@ export async function loadSteamLibrariesPaths(): Promise<string[]> {
       joinAndNormalize(typeof libPath === "string" ? libPath : libPath.path)
     );
 
-  return uniqBy([joinAndNormalize(steam), ...libraries], String);
+  return uniqBy([joinAndNormalize(steamPath), ...libraries], String);
 }
 
 export async function loadSteamLibraries(): Promise<ISteamLibrariesRaw> {
-  const steam = await findSteamPath();
-  if (!steam) throw new SteamNotFoundError();
+  const steamPath = await findSteamPath();
+  if (!steamPath) throw new SteamNotFoundError();
 
-  const mainSteamApps = path.join(steam, "steamapps");
-  const libraryFoldersPath = path.join(mainSteamApps, "libraryfolders.vdf");
+  const libraryFoldersPath = getLibrariesVdfFilePath(steamPath);
   const libraryFoldersContent = await fs.readFile(libraryFoldersPath, "utf8");
   const libraryFoldersData = vdf.parse<ILibraryFolders>(libraryFoldersContent);
 

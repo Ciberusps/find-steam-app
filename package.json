@@ -1,6 +1,6 @@
 {
   "name": "@ciberus/find-steam-app",
-  "version": "2.0.1",
+  "version": "3.0.0",
   "private": false,
   "description": "Find location of an installed Steam app",
   "keywords": [

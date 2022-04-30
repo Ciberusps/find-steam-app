@@ -10,13 +10,13 @@ import {
 import { findSteamPath } from "../steam";
 import { joinAndNormalize } from "../utils";
 
-import { mockLoad, steamFolder } from "./utils";
+import { mockLoad, steamPath } from "./utils";
 
 jest.mock("../steam", () => {
   const originalModule = jest.requireActual("../steam");
   return {
     ...originalModule,
-    findSteamPath: jest.fn().mockImplementation(() => steamFolder),
+    findSteamPath: jest.fn().mockImplementation(() => steamPath),
   };
 });
 
@@ -38,7 +38,7 @@ describe("SteamLibraries v2", () => {
     const result = await findSteamPath();
 
     expect(result).toBeTruthy();
-    expect(result).toBe(steamFolder);
+    expect(result).toBe(steamPath);
   });
 
   test("findSteamLibrariesPaths", async () => {
@@ -46,7 +46,7 @@ describe("SteamLibraries v2", () => {
 
     expect(result).toBeTruthy();
     expect(result).toEqual([
-      joinAndNormalize(steamFolder),
+      joinAndNormalize(steamPath),
       joinAndNormalize("d/SteamLibrary"),
       joinAndNormalize("e/SteamLibrary"),
       joinAndNormalize("f/SteamLibrary"),
@@ -100,12 +100,16 @@ describe("SteamLibraries v2", () => {
     const result = await findSteam();
     expect(result).toBeTruthy();
     expect(result.version).toBe("v2");
-
+    expect(result.steamPath).toBe(steamPath);
     expect(result.libraries).toHaveLength(4);
+    expect(result.librariesVdfFilePath).toBe(
+      joinAndNormalize(steamPath, "steamapps", "libraryfolders.vdf")
+    );
 
     expect(result.libraries?.[0].apps).toHaveLength(1);
-    expect(result.libraries?.[0].path).toBe(joinAndNormalize(steamFolder));
+    expect(result.libraries?.[0].path).toBe(joinAndNormalize(steamPath));
     expect(result.libraries?.[0].apps?.[0]?.appId).toBe(228980);
+    expect(result.libraries?.[0].apps?.[0]?.manifestPath).toBeDefined();
     expect(result.libraries?.[0].apps?.[0]?.manifest.Universe).toBeDefined();
     expect(result.libraries?.[0].apps?.[0]?.manifest.StateFlags).toBeDefined();
     expect(result.libraries?.[0].totalsize).toBeDefined();

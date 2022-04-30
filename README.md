@@ -1,90 +1,97 @@
 # ciberus/find-steam-app
 
-> Find location of an installed Steam app
+Find steam location on disk, installed steam apps and [libraries](#How-it-works)
 
-## Install
+Rewrite of original [find-steam-app](https://github.com/ark120202/find-steam-app) with improved types, written tests, new functions like `findSteam` and fixed edge cases with multiple "steam libraries"
 
-> npm i @ciberus/find-steam-app -S
+### Install
 
-Steam has "Libraries" - locations on disks there games installed
-Steam "Libraries" has 2 versions, most users use v2, but this package support v1 also
+```bash
+npm i @ciberus/find-steam-app -S
+```
 
-- v1 - contain only path to library, we can identify where app installed only indirectly by searching apps manifests `appmanifest_%appId%.acf` in Steam Libraries
-- v2 - contains complete info about library and apps inside it, that gives opportunity to detect where app installed exactly
-
-## Support
+### Support
 
 - windows ✅
 - osx - ✅
 - linux - ⚠️not tested
 
-## Usage
+### Usage
 
 ```ts
 import {
-  ISteamLibraries,
   IAppManifest,
+  ISteamLibraries,
   ISteamLibrariesRaw,
   findSteamPath,
   findSteamAppById,
   findSteamAppByName,
   findSteamAppManifest,
   findSteamLibraries,
-  getLibraryAppsManifestsFolder,
-  getLibraryAppsInstallFolder,
+  getLibraryManifestsFolder,
+  getLibraryInstallsFolder,
 } from "find-steam-app";
-
-await findSteamPath();
-// => '/path/to/steam'
-
-await findSteamAppById(570);
-// => '/path/to/steam/steamapps/common/dota 2 beta'
-
-await findSteamAppByName("dota 2 beta");
-// => '/path/to/steam/steamapps/common/dota 2 beta'
-
-const res: IAppManifest = await findSteamAppManifest(570);
-// => { appid: 570, Universe: 1, name: 'Dota 2', ... }
-// returns `AppManifest` more info below
-
-const libs = await findSteamLibrariesPaths();
-// => ['/path/to/steam', '/path/to/library']
-
-// can be transformed like this
-libs.map(getLibraryAppsManifestsFolder);
-// => ['/path/to/steam/steamapps', '/path/to/library/steamapps']
-libs.map(getLibraryAppsInstallFolder);
-// => ['/path/to/steam/steamapps/common', '/path/to/library/steamapps/common']
-
-const steamLibsRaw: ISteamLibrariesRaw = await findSteamLibraries();
-// => [{ path: '/path/to/library/steamapps', totalsize: 41234, apps: ['570'], ... }, ...]
 
 const steamLibs: ISteamLibraries = await findSteam();
 // => {
 //      version: "v2",
+//      steamPath: "C:/Program Files (x86)/Steam",
+//      librariesVdfFilePath: "C:/Program Files (x86)/Steam/steamapps/libraryfolders.vdf"
 //      libraries: [{
-//           path: "/path/to/lib",
+//           path: "F:/SteamLibrary",
 //           apps: [{
 //             appId: 570,
-//             path: "/path/to/app",
+//             path: "F:/SteamLibrary/steamapps/common/dota 2 beta",
+//             manifestPath: "F:/SteamLibrary/steamapps/appmanifest_570.acf"
 //             manifest: {
 //                appid: 570,
 //                installdir: "dota 2 beta"
-//                buildid: 340918349
+//                buildid: 8651789
 //                ...
 //             }
 //          }]
 //      }]
 //    }
+
+await findSteamPath();
+// => 'C:/Program Files (x86)/Steam'
+
+await findSteamAppById(570);
+// => 'F:/SteamLibrary/steamapps/common/dota 2 beta'
+
+await findSteamAppByName("dota 2 beta");
+// => 'F:/SteamLibrary/steamapps/common/dota 2 beta'
+
+const res: IAppManifest = await findSteamAppManifest(570);
+// => { appid: 570, Universe: 1, name: 'Dota 2', ... }
+
+const libs: string[] = await findSteamLibrariesPaths();
+// => ['C:/Program Files (x86)/Steam', 'F:/SteamLibrary', ...]
+
+// can be transformed like this
+libs.map(getLibraryManifestsFolder);
+// => ['C:/Program Files (x86)/Steam/steamapps', 'F:/SteamLibrary/steamapps']
+libs.map(getLibraryInstallsFolder);
+// => ['C:/Program Files (x86)/Steam/steamapps/common', 'F:/SteamLibrary/steamapps/common', ...]
+
+const steamLibsRaw: ISteamLibrariesRaw = await findSteamLibraries();
+// => [{ path: 'F:/SteamLibrary', totalsize: 41234, apps: ['570'], ... }, ...]
 ```
 
 AppManifest - [manifest.ts](src/manifest.ts)
+
+### How it works
+
+Steam has "Libraries" - locations on disks there games installed, "Libraries" has 2 versions, most users use v2, but this package support v1 also
+
+- v1 - contain only path to library, we can identify where app installed only indirectly by searching apps manifests `appmanifest_%appId%.acf` in Steam Libraries and filter them in some edge cases like
+- v2 - contains complete info about library and apps inside it, that gives opportunity to detect where app installed exactly
 
 ## Tests
 
 - `__data__` contain the files that will be used to mock the filesystem.
 - `__data__` mimic the filesystem of the computer.
-- so if u know any edge cases, u can try to add those files and see if it works
+- so if u know any edge cases, u can try to add those files and see tests are pass if not pls open issue
 
 ## Edge cases
 
@@ -100,11 +107,17 @@ AppManifest - [manifest.ts](src/manifest.ts)
   - no manifest
   - has folder `dota 2 beta` in `/common`
 - disk F - right disk
-
   - has appmanifest_570.acf
   - dont have appmanifest \*.acf.tmp.save
   - has folder `dota 2 beta` in `/common`
 
+4. manifest exists but game folder - not
+5. manifest exists but game moved in another library and cant read manifest
+6. manifest exists but game moved in another library, we can only compare size of games and choose heavier one
+
 ## TODO
 
 - jsdoc/tsdoc
+- better edge cases description
+- mb in `findSteam` return `libraryfolders.vdf` path
+- mb in `findSteam` return paths to apps manifests and installs

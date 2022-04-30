@@ -2,6 +2,12 @@ import execa from "execa";
 import fs from "fs-extra";
 import path from "path";
 
+import { joinAndNormalize } from "./utils";
+
+const REG_TREE_PATH = "HKCU\\Software\\Valve\\Steam";
+const REG_KEY_NOT_FOUND =
+  "The system was unable to find the specified registry key or value";
+
 export class SteamNotFoundError extends Error {
   public constructor() {
     super("Steam installation directory not found");
@@ -16,10 +22,6 @@ const getRegExePath = () =>
   process.platform === "win32" && process.env.windir != null
     ? path.join(process.env.windir, "System32", "reg.exe")
     : "REG";
-
-const REG_TREE_PATH = "HKCU\\Software\\Valve\\Steam";
-const REG_KEY_NOT_FOUND =
-  "The system was unable to find the specified registry key or value";
 
 async function windows() {
   let programFiles = process.env["ProgramFiles(x86)"];
@@ -53,15 +55,27 @@ async function windows() {
  *
  * @returns Location of Steam. `undefined` if Steam wasn't found.
  */
-export async function findSteamPath() {
+export async function findSteamPath(): Promise<string | undefined> {
+  let result: string | undefined;
+
   switch (process.platform) {
     case "win32":
-      return windows();
+      result = await windows();
+      break;
     case "linux":
-      return pathIfExists(`${process.env.HOME}/.local/share/Steam`);
+      result = await pathIfExists(`${process.env.HOME}/.local/share/Steam`);
+      break;
     case "darwin":
-      return pathIfExists(`${process.env.HOME}/Library/Application Support/Steam`);
+      result = await pathIfExists(
+        `${process.env.HOME}/Library/Application Support/Steam`
+      );
+      break;
     default:
       throw new Error(`Steam finding isn't implemented for ${process.platform}`);
   }
+
+  if (result) {
+    result = joinAndNormalize(result);
+  }
+  return result;
 }
