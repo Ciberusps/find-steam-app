@@ -2,7 +2,7 @@
 
 Find steam location on disk, installed steam apps and [libraries](#How-it-works)
 
-Rewrite of original [find-steam-app](https://github.com/ark120202/find-steam-app) with improved types, written tests, new functions like `findSteam` and fixed edge cases with multiple "steam libraries"
+Rewrite of original [find-steam-app](https://github.com/ark120202/find-steam-app) with improved types, written tests, new functions like `findSteam` and fixed edge cases with multiple "steam libraries". If you find it helpful please star it on github
 
 ### Install
 
@@ -84,7 +84,7 @@ AppManifest - [manifest.ts](src/manifest.ts)
 
 Steam has "Libraries" - locations on disks there games installed, "Libraries" has 2 versions, most users use v2, but this package support v1 also
 
-- v1 - contain only path to library, we can identify where app installed only indirectly by searching apps manifests `appmanifest_%appId%.acf` in Steam Libraries and filter them in some edge cases like
+- v1 - contain only path to library, we can identify where app installed only indirectly by searching apps manifests `appmanifest_%appId%.acf` in Steam Libraries
 - v2 - contains complete info about library and apps inside it, that gives opportunity to detect where app installed exactly
 
 ## Tests
@@ -119,5 +119,3 @@ Steam has "Libraries" - locations on disks there games installed, "Libraries" ha
 
 - jsdoc/tsdoc
 - better edge cases description
-- mb in `findSteam` return `libraryfolders.vdf` path
-- mb in `findSteam` return paths to apps manifests and installs
