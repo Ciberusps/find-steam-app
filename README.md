@@ -9,7 +9,7 @@ Rewrite of original [find-steam-app](https://github.com/ark120202/find-steam-app
 Steam has "Libraries" - locations on disks there games installed, "Libraries" has 2 versions, most users use v2, but this package support v1 also
 
 - v1 - [recommended] contain only path to library, we can identify where app installed only indirectly by searching apps manifests `appmanifest_%appId%.acf` in Steam Libraries folders
-- v2 - [not recommended] contains complete info about library and apps inside it, that gives opportunity to detect where app installed exactly. But syncs poorly only on steam start, results return might be irrelevant from 4.0.0 library forced to use "v1" by default, previously "v2" was default
+- v2 - [not recommended] contains complete info about library and apps inside it, that gives opportunity to detect where app installed exactly. But syncs poorly only on steam start, returned results might be irrelevant from `v4.0.0` library forced to use "v1" by default, previously "v2" was default
 
 ### Install
 
