@@ -97,7 +97,7 @@ describe("SteamLibraries v2", () => {
   });
 
   test("findSteam", async () => {
-    const result = await findSteam();
+    const result = await findSteam({ forceV1: false });
     expect(result).toBeTruthy();
     expect(result.version).toBe("v2");
     expect(result.steamPath).toBe(steamPath);
@@ -114,6 +114,33 @@ describe("SteamLibraries v2", () => {
     expect(result.libraries?.[0].apps?.[0]?.manifest.StateFlags).toBeDefined();
     expect(result.libraries?.[0].totalsize).toBeDefined();
     expect(result.libraries?.[0].update_clean_bytes_tally).toBeDefined();
+
+    expect(result.libraries?.[1].apps).toHaveLength(2);
+
+    expect(result.libraries?.[2].apps).toHaveLength(9);
+
+    expect(result.libraries?.[3].apps).toHaveLength(1);
+    expect(result.libraries?.[3].apps?.[0]?.appId).toBe(570);
+  });
+
+  test("findSteam if forceV1 true should return relevant results", async () => {
+    const result = await findSteam({ forceV1: true });
+    expect(result).toBeTruthy();
+    expect(result.version).toBe("v1");
+    expect(result.steamPath).toBe(steamPath);
+    expect(result.libraries).toHaveLength(4);
+    expect(result.librariesVdfFilePath).toBe(
+      joinAndNormalize(steamPath, "steamapps", "libraryfolders.vdf")
+    );
+
+    expect(result.libraries?.[0].apps).toHaveLength(1);
+    expect(result.libraries?.[0].path).toBe(steamPath);
+    expect(result.libraries?.[0].apps?.[0]?.appId).toBe(228980);
+    expect(result.libraries?.[0].apps?.[0]?.manifestPath).toBeDefined();
+    expect(result.libraries?.[0].apps?.[0]?.manifest.Universe).toBeDefined();
+    expect(result.libraries?.[0].apps?.[0]?.manifest.StateFlags).toBeDefined();
+    expect(result.libraries?.[0].totalsize).toBeUndefined();
+    expect(result.libraries?.[0].update_clean_bytes_tally).toBeUndefined();
 
     expect(result.libraries?.[1].apps).toHaveLength(2);
 
