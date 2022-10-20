@@ -124,3 +124,5 @@ AppManifest - [manifest.ts](src/manifest.ts)
 
 - jsdoc/tsdoc
 - better edge cases description
+
+
